@@ -23,39 +23,38 @@ function Scene (image) {
     init ();
 
     function init () {
-		renderer = new THREE.WebGLRenderer( { antialias: true,  alpha: true  } );
-		renderer.setClearColor( 0xffffff, 0);
-		renderer.setPixelRatio( window.devicePixelRatio );
+        renderer = new THREE.WebGLRenderer( { antialias: true,  alpha: true  } );
+        renderer.setClearColor( 0xffffff, 0);
+        renderer.setPixelRatio( window.devicePixelRatio );
 
-		$this.dom.appendChild( renderer.domElement );
+        $this.dom.appendChild( renderer.domElement );
 
-		setScene();
-		setLight();
-		setCamera();
+        setScene();
+        setLight();
+        setCamera();
         setWall();
         setTransition(transitionType)
-	};
+    };
 
     function setScene () {
         scene = new THREE.Scene();
     };
 
-	function setCamera () {
-		camera = new THREE.PerspectiveCamera(50, 1, 0.1, 2000 );
-		camera.position.z = 10;
-	};
+    function setCamera () {
+        camera = new THREE.PerspectiveCamera(50, 1, 0.1, 2000 );
+        camera.position.z = 10;
+    };
 
-	function setLight () {
-		light = new THREE.HemisphereLight();
-		scene.add( light );
-	};
+    function setLight () {
+        light = new THREE.HemisphereLight();
+        scene.add( light );
+    };
 
     function setWall () {
         wall = new Wall(0, getHorizontalFov(0, depth), getVerticalFov(0, depth), depth, columns, rows, image);
         scene.add( wall.group );
     };
 
-    // make function start on play / pause
     // make gravity not have to pass in dimensions
     function setTransition (transitionType) {
         switch (transitionType) {
@@ -80,9 +79,9 @@ function Scene (image) {
         return getVerticalFov(objectPos, objectDepth) * camera.aspect;
     };
 
-	function setSizeToWindow () {
-		width = window.innerWidth;
-		height = window.innerHeight;
+    function setSizeToWindow () {
+        width = window.innerWidth;
+        height = window.innerHeight;
 
         camera.aspect = width/height;
         camera.updateProjectionMatrix();
@@ -105,7 +104,7 @@ function Scene (image) {
         //     renderer.domElement.style.top = -overflow + "px";
         //     renderer.domElement.style.left = "0px";
         // }
-	};
+    };
 
     function onMouseMove( event ) {
     	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
@@ -169,11 +168,11 @@ function Scene (image) {
         return scrollDist * getVerticalFov(0, 1) / height;
     }
 
-	function animate() {
+    function animate() {
         raycast();
-		renderer.render( scene, camera );
-		requestAnimationFrame( animate );
-	};
+        renderer.render( scene, camera );
+        requestAnimationFrame( animate );
+    };
 
     function raycast() {
         var seconds = new Date().getTime() / 2000;
@@ -194,25 +193,25 @@ function Scene (image) {
     	// }
     };
 
-	this.play = function () {
-		setSizeToWindow ();
+    this.play = function () {
+        setSizeToWindow ();
 
         transition.play();
         animationRequest = requestAnimationFrame( animate );
 
-		window.addEventListener( 'resize', setSizeToWindow);
+        window.addEventListener( 'resize', setSizeToWindow);
         window.addEventListener( 'mousemove', onMouseMove, false );
         window.addEventListener('mousewheel', onDocumentMouseWheel, false);
         window.addEventListener('touchstart', onDocumentTouchStart, false);
-	};
+    };
 
-	this.stop = function () {
+    this.stop = function () {
         transition.pause();
-		cancelAnimationFrame( animationRequest );
+        cancelAnimationFrame( animationRequest );
 
-		window.removeEventListener( 'resize', setSizeToWindow);
+        window.removeEventListener( 'resize', setSizeToWindow);
         window.removeEventListener( 'mousemove', onMouseMove, false );
         window.removeEventListener('mousewheel', onDocumentMouseWheel, false);
         window.removeEventListener('touchstart', onDocumentTouchStart, false);
-	};
+    };
 }

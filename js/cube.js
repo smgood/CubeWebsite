@@ -26,7 +26,6 @@ function Cube (size, position, image, offSetInfo) {
             } else {
                 materials.push(colorMaterial);
             }
-
         }
 
         object = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial(materials));
@@ -34,17 +33,17 @@ function Cube (size, position, image, offSetInfo) {
     };
 
     function cropTexture (geometry, face, offSetInfo) {
-		var faceVertexUvs = geometry.faceVertexUvs[ 0 ];
+        var faceVertexUvs = geometry.faceVertexUvs[ 0 ];
         changeUvs (faceVertexUvs[face[0]], offSetInfo);
         changeUvs (faceVertexUvs[face[1]], offSetInfo);
-	};
+    };
 
     function changeUvs(uvs, offSetInfo) {
         for (var j = 0; j < uvs.length; j++ ){
-			var uv = uvs[ j ];
-			uv.x = ( uv.x * offSetInfo.unitX ) + offSetInfo.offsetX;
-			uv.y = ( uv.y * offSetInfo.unitY ) + offSetInfo.offsetY;
-		}
+            var uv = uvs[ j ];
+            uv.x = ( uv.x * offSetInfo.unitX ) + offSetInfo.offsetX;
+            uv.y = ( uv.y * offSetInfo.unitY ) + offSetInfo.offsetY;
+        }
     };
 
     this.appendTo = function (parent) {
@@ -59,7 +58,8 @@ function Cube (size, position, image, offSetInfo) {
         object.position.set(
             position.x + offset.x,
             position.y + offset.y,
-            position.z + offset.z);
+            position.z + offset.z
+        );
     };
 
     this.setOriginalRotation = function () {
