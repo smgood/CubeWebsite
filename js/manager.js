@@ -28,7 +28,7 @@ function Manager (parent) {
 
     function loadImages () {
         var loader = new THREE.TextureLoader( manager );
-        loader.load( './images/monet.jpg', function ( Image ) {
+        loader.load( './images/picasso.jpg', function ( Image ) {
             image = Image;
         });
     }
