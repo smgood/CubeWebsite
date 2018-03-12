@@ -1,13 +1,16 @@
-function Wall (zPos, width, height, depth, columns, rows, image) {
+function Wall (wallInfo, zPos, width, height, depth, image) {
     
     // make group private + get object function
     $this = this;
     this.group;
     var cubes = [];
+    var rows, columns;
 
     init();
 
     function init () {
+        rows = wallInfo.dimensions.rows;
+        columns = wallInfo.dimensions.columns;
 
         $this.group = new THREE.Group();
 
@@ -47,7 +50,11 @@ function Wall (zPos, width, height, depth, columns, rows, image) {
 
     };
 
+    this.getDimensions = function () {
+        return wallInfo.dimensions
+    };
+
     this.getCubes = function () {
         return cubes;
-    }
+    };
 };

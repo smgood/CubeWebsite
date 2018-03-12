@@ -1,4 +1,4 @@
-function Scene (image) {
+function Scene (dimensions, image) {
 
     var $this = this;
     var camera, scene, light, wall, renderer;
@@ -11,10 +11,10 @@ function Scene (image) {
     var scrollDist = 0;
 
     // pass variables into class
-    var rows = 12;
-    var columns = 12;
     var depth = 0.5;
     var transitionType = "gravity";
+
+    var wallInfo;
 
     // make dom private
     this.dom = document.createElement( 'div' );
@@ -51,18 +51,24 @@ function Scene (image) {
     };
 
     function setWall () {
-        wall = new Wall(0, getHorizontalFov(0, depth), getVerticalFov(0, depth), depth, columns, rows, image);
+        setWallInfo();
+        wall = new Wall(wallInfo, 0, getHorizontalFov(0, depth), getVerticalFov(0, depth), depth, image);
         scene.add( wall.group );
     };
 
-    // make gravity not have to pass in dimensions
+    function setWallInfo () {
+        wallInfo = {
+            dimensions: dimensions,
+        }
+    }
+
     function setTransition (transitionType) {
         switch (transitionType) {
             case "scroll":
                 transition = new Scroll($this, wall);
                 break;
             case "gravity":
-                transition = new Gravity($this, wall, rows, columns);
+                transition = new Gravity($this, wall);
                 break
             default:
                 transition = new Scroll($this, wall);
