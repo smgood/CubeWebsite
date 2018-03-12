@@ -1,4 +1,4 @@
-function Cube (size, position, image, offSetInfo) {
+function Cube (size, position, image, cropInfo) {
 
     var object;
 
@@ -6,7 +6,7 @@ function Cube (size, position, image, offSetInfo) {
 
     function init () {
         var geometry = new THREE.BoxGeometry( size.x, size.y, size.z );
-        cropTexture(geometry, face.front, offSetInfo);
+        cropTexture(geometry, face.front, cropInfo);
 
         image.minFilter = THREE.LinearFilter;
         var imageMaterial = new THREE.MeshBasicMaterial({
@@ -32,23 +32,23 @@ function Cube (size, position, image, offSetInfo) {
         object.position.set(position.x, position.y, position.z);
     };
 
-    function cropTexture (geometry, face, offSetInfo) {
+    function cropTexture (geometry, face, cropInfo) {
         var faceVertexUvs = geometry.faceVertexUvs[ 0 ];
-        changeUvs (faceVertexUvs[face[0]], offSetInfo);
-        changeUvs (faceVertexUvs[face[1]], offSetInfo);
+        changeUvs (faceVertexUvs[face[0]], cropInfo);
+        changeUvs (faceVertexUvs[face[1]], cropInfo);
     };
 
-    function changeUvs(uvs, offSetInfo) {
+    function changeUvs(uvs, cropInfo) {
         for (var j = 0; j < uvs.length; j++ ){
             var uv = uvs[ j ];
-            uv.x = ( uv.x * offSetInfo.unitX ) + offSetInfo.offsetX;
-            uv.y = ( uv.y * offSetInfo.unitY ) + offSetInfo.offsetY;
+            uv.x = ( uv.x * cropInfo.unitX ) + cropInfo.offsetX;
+            uv.y = ( uv.y * cropInfo.unitY ) + cropInfo.offsetY;
         }
     };
 
     this.appendTo = function (parent) {
         parent.add( object );
-    }
+    };
 
     this.setOriginalPosition = function () {
         object.position.set(position.x, position.y, position.z);

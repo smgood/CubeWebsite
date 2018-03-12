@@ -1,5 +1,5 @@
-function Wall (wallInfo, zPos, width, height, depth, image) {
-    
+function Wall (image, size, dimensions) {
+
     // make group private + get object function
     $this = this;
     this.group;
@@ -9,15 +9,15 @@ function Wall (wallInfo, zPos, width, height, depth, image) {
     init();
 
     function init () {
-        rows = wallInfo.dimensions.rows;
-        columns = wallInfo.dimensions.columns;
+        rows = dimensions.rows;
+        columns = dimensions.columns;
 
         $this.group = new THREE.Group();
 
         var cubeSize = new THREE.Vector3(
-            width/columns,
-            height/rows,
-            depth
+            size.width/columns,
+            size.height/rows,
+            size.depth
         );
 
         // make cubes organized first by column
@@ -30,16 +30,16 @@ function Wall (wallInfo, zPos, width, height, depth, image) {
                 var cubePosition = new THREE.Vector3(
                     cubeSize.x * (j - columns/2 + 0.5),
                     cubeSize.y * (i - rows/2 + 0.5),
-                    zPos
+                    0
                 );
 
-                offSetInfo = new OffSetInfo (
+                cropInfo = new CropInfo (
                     1/columns,
                     1/rows,
                     j/columns,
                     i/rows
                 );
-                var cube = new Cube (cubeSize, cubePosition, image, offSetInfo);
+                var cube = new Cube (cubeSize, cubePosition, image, cropInfo);
                 row.push(cube);
                 $this.group.add(cube.getObject());
             }
@@ -51,7 +51,11 @@ function Wall (wallInfo, zPos, width, height, depth, image) {
     };
 
     this.getDimensions = function () {
-        return wallInfo.dimensions
+        return dimensions;
+    };
+
+    this.getSize = function () {
+        return size;
     };
 
     this.getCubes = function () {

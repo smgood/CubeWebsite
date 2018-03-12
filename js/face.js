@@ -7,7 +7,7 @@ var face = {
     "bottom" : [6, 7]
 };
 
-function OffSetInfo (UnitX, UnitY, OffsetX, OffsetY) {
+function CropInfo (UnitX, UnitY, OffsetX, OffsetY) {
     this.unitX = UnitX;
     this.unitY = UnitY;
     this.offsetX = OffsetX;

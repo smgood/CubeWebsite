@@ -2,13 +2,14 @@
 // parent - object that webGL scene will be appended to
 // columns - number of cubes columns
 // rows - number of cube rows
+// transition - type of  user scroll animation
 function Manager (parameters = {}) {
 
     // make image into images, an array of images
     // pass image as optional parameter
     var player, manager, image;
 
-    var parent, columns, rows;
+    var parent, columns, rows, transition;
     var dimensions;
 
     init ();
@@ -29,7 +30,7 @@ function Manager (parameters = {}) {
 
         manager.onLoad = function ( ) {
             console.log( 'Loading complete!');
-            scene = new Scene(dimensions, image);
+            scene = new Scene(dimensions, image, transition);
             scene.play();
             parent.append( scene.dom );
         };
@@ -39,6 +40,7 @@ function Manager (parameters = {}) {
             parent = parameters.parent || document.body;
             rows = parameters.rows || 10;
             columns = parameters.columns || 10;
+            transition = parameters.transition || "scroll";
 
             dimensions = {
                 rows: rows,
@@ -53,6 +55,11 @@ function Manager (parameters = {}) {
         });
     };
 
-    // make play and pause functions
-    // this.play & this.pause
+    this.play = function () {
+        scene.play();
+    }
+
+    this.stop = function () {
+        scene.stop();
+    }
 }

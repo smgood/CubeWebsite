@@ -1,4 +1,4 @@
-function Scene (dimensions, image) {
+function Scene (dimensions, image, transitionType) {
 
     var $this = this;
     var camera, scene, light, wall, renderer;
@@ -12,7 +12,6 @@ function Scene (dimensions, image) {
 
     // pass variables into class
     var depth = 0.5;
-    var transitionType = "gravity";
 
     var wallInfo;
 
@@ -51,16 +50,15 @@ function Scene (dimensions, image) {
     };
 
     function setWall () {
-        setWallInfo();
-        wall = new Wall(wallInfo, 0, getHorizontalFov(0, depth), getVerticalFov(0, depth), depth, image);
+        var size = {
+            width: getHorizontalFov(0, depth),
+            height: getVerticalFov(0, depth),
+            depth: depth
+        };
+
+        wall = new Wall(image, size, dimensions);
         scene.add( wall.group );
     };
-
-    function setWallInfo () {
-        wallInfo = {
-            dimensions: dimensions,
-        }
-    }
 
     function setTransition (transitionType) {
         switch (transitionType) {
@@ -72,8 +70,8 @@ function Scene (dimensions, image) {
                 break
             default:
                 transition = new Scroll($this, wall);
-        }
-    }
+        };
+    };
 
     function getVerticalFov(objectPos, objectDepth) {
         var fov = THREE.Math.degToRad( camera.fov );
@@ -119,7 +117,7 @@ function Scene (dimensions, image) {
 
     function onDocumentMouseWheel( event ) {
         updateScrollDistance (event.wheelDeltaY * 0.05);
-    }
+    };
 
     function onDocumentTouchStart( event ) {
         event.preventDefault();
@@ -134,7 +132,7 @@ function Scene (dimensions, image) {
             touchDistance = event.touches[0].clientY - touchStart;
             updateScrollDistance (touchDistance);
             touchStart = event.touches[0].clientY;
-        }
+        };
 
         function touchEnd(event) {
             event.preventDefault();
@@ -168,11 +166,11 @@ function Scene (dimensions, image) {
 
     this.getScrollDistance = function () {
         return scrollDist;
-    }
+    };
 
     this.getRelativeScrollDistance = function () {
-        return scrollDist * getVerticalFov(0, 1) / height;
-    }
+        return scrollDist * getVerticalFov(0, depth) / height;
+    };
 
     function animate() {
         raycast();
@@ -181,7 +179,7 @@ function Scene (dimensions, image) {
     };
 
     function raycast() {
-        var seconds = new Date().getTime() / 2000;
+        // var seconds = new Date().getTime() / 2000;
 
         // make crazy into new animation class
         // for ( var i = 0; i < rows; i++ ) {
@@ -212,7 +210,7 @@ function Scene (dimensions, image) {
     };
 
     this.stop = function () {
-        transition.pause();
+        transition.stop();
         cancelAnimationFrame( animationRequest );
 
         window.removeEventListener( 'resize', setSizeToWindow);
