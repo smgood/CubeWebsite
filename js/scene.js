@@ -158,7 +158,7 @@ function Scene (dimensions, image, transitionType) {
     };
 
     function updateScrollDistance (delta) {
-        scrollDist -= delta;
+        scrollDist -= delta * getVerticalFov(0, depth) / height;
         if (scrollDist < 0) {
             scrollDist = 0;
         }
@@ -166,10 +166,6 @@ function Scene (dimensions, image, transitionType) {
 
     this.getScrollDistance = function () {
         return scrollDist;
-    };
-
-    this.getRelativeScrollDistance = function () {
-        return scrollDist * getVerticalFov(0, depth) / height;
     };
 
     function animate() {

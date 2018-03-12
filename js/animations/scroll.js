@@ -3,7 +3,7 @@ function Scroll (scene, wall) {
     var animationRequest;
 
     function animate () {
-        wall.group.position.y = scene.getRelativeScrollDistance ();
+        wall.group.position.y = scene.getScrollDistance ();
         animationRequest = requestAnimationFrame( animate );
     }
 

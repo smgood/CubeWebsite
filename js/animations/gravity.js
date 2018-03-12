@@ -28,7 +28,7 @@ function Gravity (scene, wall) {
 
     // to do: only animate if getRelativeScrollDistance changed
     function animate () {
-        var scrollDist = scene.getRelativeScrollDistance ();
+        var scrollDist = scene.getScrollDistance ();
 
         for (var i = 0; i < dimensions.columns; i++) {
             for (var j = 0; j < dimensions.rows; j++) {
