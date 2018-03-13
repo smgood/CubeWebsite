@@ -1,7 +1,7 @@
-function Scene (dimensions, image, transitionType) {
+function Scene (dimensions, image, transitionType, depth) {
 
     var $this = this;
-    var camera, scene, light, wall, renderer;
+    var camera, scene, light, wall, renderer, dom;
     var width, height;
     var animationRequest, touchSlideRequest
     var transition;
@@ -10,15 +10,6 @@ function Scene (dimensions, image, transitionType) {
     var mouse = new THREE.Vector2();
     var scrollDist = 0;
 
-    // pass variables into class
-    var depth = 0.5;
-
-    var wallInfo;
-
-    // make dom private
-    this.dom = document.createElement( 'div' );
-    this.dom.className = "container";
-
     init ();
 
     function init () {
@@ -26,13 +17,15 @@ function Scene (dimensions, image, transitionType) {
         renderer.setClearColor( 0xffffff, 0);
         renderer.setPixelRatio( window.devicePixelRatio );
 
-        $this.dom.appendChild( renderer.domElement );
+        dom = document.createElement( 'div' );
+        dom.className = "container";
+        dom.appendChild( renderer.domElement );
 
         setScene();
         setLight();
         setCamera();
         setWall();
-        setTransition(transitionType)
+        setTransition()
     };
 
     function setScene () {
@@ -60,7 +53,7 @@ function Scene (dimensions, image, transitionType) {
         scene.add( wall.group );
     };
 
-    function setTransition (transitionType) {
+    function setTransition () {
         switch (transitionType) {
             case "scroll":
                 transition = new Scroll($this, wall);
@@ -164,10 +157,6 @@ function Scene (dimensions, image, transitionType) {
         }
     };
 
-    this.getScrollDistance = function () {
-        return scrollDist;
-    };
-
     function animate() {
         raycast();
         renderer.render( scene, camera );
@@ -213,5 +202,13 @@ function Scene (dimensions, image, transitionType) {
         window.removeEventListener( 'mousemove', onMouseMove, false );
         window.removeEventListener('mousewheel', onDocumentMouseWheel, false);
         window.removeEventListener('touchstart', onDocumentTouchStart, false);
+    };
+
+    this.getScrollDistance = function () {
+        return scrollDist;
+    };
+
+    this.getDomElement = function () {
+        return dom;
     };
 }

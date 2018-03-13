@@ -3,13 +3,14 @@
 // columns - number of cubes columns
 // rows - number of cube rows
 // transition - type of  user scroll animation
+// depth - depth size of each cube
 function Manager (parameters = {}) {
 
     // make image into images, an array of images
     // pass image as optional parameter
     var player, manager, image;
 
-    var parent, columns, rows, transition;
+    var parent, columns, rows, transition, depth;
     var dimensions;
 
     init ();
@@ -30,9 +31,9 @@ function Manager (parameters = {}) {
 
         manager.onLoad = function ( ) {
             console.log( 'Loading complete!');
-            scene = new Scene(dimensions, image, transition);
+            scene = new Scene(dimensions, image, transition, depth);
             scene.play();
-            parent.append( scene.dom );
+            parent.append( scene.getDomElement() );
         };
     };
 
@@ -41,6 +42,7 @@ function Manager (parameters = {}) {
             rows = parameters.rows || 10;
             columns = parameters.columns || 10;
             transition = parameters.transition || "scroll";
+            depth = parameters.depth || 1;
 
             dimensions = {
                 rows: rows,
