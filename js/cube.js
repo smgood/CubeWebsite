@@ -46,10 +46,6 @@ function Cube (size, position, image, cropInfo) {
         }
     };
 
-    this.appendTo = function (parent) {
-        parent.add( object );
-    };
-
     this.setOriginalPosition = function () {
         object.position.set(position.x, position.y, position.z);
     };

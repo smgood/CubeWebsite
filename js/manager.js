@@ -4,13 +4,13 @@
 // rows - number of cube rows
 // transition - type of  user scroll animation
 // depth - depth size of each cube
+// image - file path of image to be used as texture for cubes
 function Manager (parameters = {}) {
 
     // make image into images, an array of images
-    // pass image as optional parameter
-    var player, manager, image;
+    var player, manager, loadedImage;
 
-    var parent, columns, rows, transition, depth;
+    var parent, columns, rows, transition, depth, image;
     var dimensions;
 
     init ();
@@ -31,7 +31,7 @@ function Manager (parameters = {}) {
 
         manager.onLoad = function ( ) {
             console.log( 'Loading complete!');
-            scene = new Scene(dimensions, image, transition, depth);
+            scene = new Scene(dimensions, loadedImage, transition, depth);
             scene.play();
             parent.append( scene.getDomElement() );
         };
@@ -43,6 +43,7 @@ function Manager (parameters = {}) {
             columns = parameters.columns || 10;
             transition = parameters.transition || "scroll";
             depth = parameters.depth || 1;
+            image = parameters.image || './images/picasso.jpg';
 
             dimensions = {
                 rows: rows,
@@ -52,8 +53,8 @@ function Manager (parameters = {}) {
 
     function loadImages () {
         var loader = new THREE.TextureLoader( manager );
-        loader.load( './images/picasso.jpg', function ( Image ) {
-            image = Image;
+        loader.load( image, function ( LoadedImage ) {
+            loadedImage = LoadedImage;
         });
     };
 

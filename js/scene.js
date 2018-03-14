@@ -2,13 +2,19 @@ function Scene (dimensions, image, transitionType, depth) {
 
     var $this = this;
     var camera, scene, light, wall, renderer, dom;
-    var width, height;
+    var windowWidth, windowHeight;
     var animationRequest, touchSlideRequest
     var transition;
 
     var raycaster = new THREE.Raycaster();
     var mouse = new THREE.Vector2();
     var scrollDist = 0;
+    var size = {
+        width: 10,
+        //make into image aspect ratio
+        height: 10,
+        depth: depth,
+    };
 
     init ();
 
@@ -34,7 +40,7 @@ function Scene (dimensions, image, transitionType, depth) {
 
     function setCamera () {
         camera = new THREE.PerspectiveCamera(50, 1, 0.1, 2000 );
-        camera.position.z = 10;
+        setCameraPosition();
     };
 
     function setLight () {
@@ -43,14 +49,8 @@ function Scene (dimensions, image, transitionType, depth) {
     };
 
     function setWall () {
-        var size = {
-            width: getHorizontalFov(0, depth),
-            height: getVerticalFov(0, depth),
-            depth: depth
-        };
-
         wall = new Wall(image, size, dimensions);
-        scene.add( wall.group );
+        scene.add( wall.getObject() );
     };
 
     function setTransition () {
@@ -66,23 +66,18 @@ function Scene (dimensions, image, transitionType, depth) {
         };
     };
 
-    function getVerticalFov(objectPos, objectDepth) {
+    function setCameraPosition() {
         var fov = THREE.Math.degToRad( camera.fov );
-        workingDistance = Math.abs(objectPos - camera.position.z) - objectDepth/2;
-        return (2 * workingDistance * Math.tan (fov/2));
-    };
-
-    function getHorizontalFov(objectPos, objectDepth) {
-        return getVerticalFov(objectPos, objectDepth) * camera.aspect;
+        camera.position.z = (size.height / ( 2 * Math.tan (fov/2))) + size.depth/2
     };
 
     function setSizeToWindow () {
-        width = window.innerWidth;
-        height = window.innerHeight;
+        windowWidth = window.innerWidth;
+        windowHeight = window.innerHeight;
 
-        camera.aspect = width/height;
+        camera.aspect = windowWidth/windowHeight;
         camera.updateProjectionMatrix();
-        renderer.setSize( width, height );
+        renderer.setSize( windowWidth, windowHeight );
 
         // resize image when width is greater than height
         // problem arrizes when raycasting because camera doesn't match mouse
@@ -104,8 +99,8 @@ function Scene (dimensions, image, transitionType, depth) {
     };
 
     function onMouseMove( event ) {
-    	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    	mouse.x = ( event.clientX / windowWidth ) * 2 - 1;
+    	mouse.y = - ( event.clientY / windowHeight ) * 2 + 1;
     };
 
     function onDocumentMouseWheel( event ) {
@@ -151,7 +146,7 @@ function Scene (dimensions, image, transitionType, depth) {
     };
 
     function updateScrollDistance (delta) {
-        scrollDist -= delta * getVerticalFov(0, depth) / height;
+        scrollDist -= delta * size.height / windowHeight;
         if (scrollDist < 0) {
             scrollDist = 0;
         }

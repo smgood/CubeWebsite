@@ -1,8 +1,7 @@
 function Wall (image, size, dimensions) {
 
-    // make group private + get object function
     $this = this;
-    this.group;
+    var group;
     var cubes = [];
     var rows, columns;
 
@@ -12,7 +11,7 @@ function Wall (image, size, dimensions) {
         rows = dimensions.rows;
         columns = dimensions.columns;
 
-        $this.group = new THREE.Group();
+        group = new THREE.Group();
 
         var cubeSize = new THREE.Vector3(
             size.width/columns,
@@ -41,7 +40,7 @@ function Wall (image, size, dimensions) {
                 );
                 var cube = new Cube (cubeSize, cubePosition, image, cropInfo);
                 row.push(cube);
-                $this.group.add(cube.getObject());
+                group.add(cube.getObject());
             }
 
             cubes.push(row);
@@ -60,5 +59,9 @@ function Wall (image, size, dimensions) {
 
     this.getCubes = function () {
         return cubes;
+    };
+
+    this.getObject = function () {
+        return group;
     };
 };
