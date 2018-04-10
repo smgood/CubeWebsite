@@ -1,9 +1,8 @@
-function Wall (image, size, dimensions) {
+function Wall (image, wallSize, dimensions) {
 
     $this = this;
-    var group;
+    var group, cubeSize, rows, columns;
     var cubes = [];
-    var rows, columns;
 
     init();
 
@@ -13,39 +12,42 @@ function Wall (image, size, dimensions) {
 
         group = new THREE.Group();
 
-        var cubeSize = new THREE.Vector3(
-            size.width/columns,
-            size.height/rows,
-            size.depth
+        cubeSize = new THREE.Vector3(
+            wallSize.x/columns,
+            wallSize.y/rows,
+            wallSize.z
         );
 
-        // make cubes organized first by column
-        for (var i = 0; i < rows; i++) {
+        for (var i = 0; i < columns; i++) {
 
-            var row = [];
+            var column = [];
 
-            for (var j = 0; j < columns; j++) {
+            for (var j = 0; j < rows; j++) {
 
                 var cubePosition = new THREE.Vector3(
-                    cubeSize.x * (j - columns/2 + 0.5),
-                    cubeSize.y * (i - rows/2 + 0.5),
+                    cubeSize.x * (i - columns/2 + 0.5),
+                    cubeSize.y * (j - rows/2 + 0.5),
                     0
                 );
 
                 cropInfo = new CropInfo (
                     1/columns,
                     1/rows,
-                    j/columns,
-                    i/rows
+                    i/columns,
+                    j/rows
                 );
                 var cube = new Cube (cubeSize, cubePosition, image, cropInfo);
-                row.push(cube);
+                column.push(cube);
                 group.add(cube.getObject());
             }
 
-            cubes.push(row);
+            cubes.push(column);
 
         }
+
+    };
+
+    this.dispose = function () {
 
     };
 
@@ -53,8 +55,12 @@ function Wall (image, size, dimensions) {
         return dimensions;
     };
 
-    this.getSize = function () {
-        return size;
+    this.getWallSize = function () {
+        return wallSize;
+    };
+
+    this.getCubeSize = function () {
+        return cubeSize;
     };
 
     this.getCubes = function () {

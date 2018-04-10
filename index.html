@@ -32,6 +32,8 @@ Sean
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
     <script src="js/libraries/three.min.js"></script>
+    <script src="js/libraries/stats.min.js"></script>
+    <script src='js/libraries/dat.gui.min.js'></script>
 
     <!-- scene -->
     <script src="js/manager.js"></script>
@@ -43,17 +45,100 @@ Sean
     <!-- animations -->
     <script src="js/animations/scroll.js"></script>
     <script src="js/animations/gravity.js"></script>
+    <script src="js/animations/tetris.js"></script>
 
-    <script type="text/javascript">
+    <script>
         $(document).ready(function() {
-            manager = new Manager({
-                transition: "gravity",
-            });
+
+            var parameters  = {
+                rows: 10,
+                columns: 10,
+                depth: 10,
+                animation: 'gravity',
+                image: './images/picasso.jpg',
+                transition: 'exit',
+            };
+
+            var manager = new Manager(parameters);
+
+            // change parameters ui
+            var checkboxes = {
+                animations: {
+                    scroll: false,
+                    gravity: true,
+                    tetris: false,
+                },
+                images: {
+                    picasso: true,
+                    monet: false,
+                },
+                transitions: {
+                    enter: false,
+                    exit: true,
+                },
+            };
+
+            var sceneChanger = function( ) {
+                manager.dispose();
+                manager = new Manager(parameters);
+            };
+            var gui = new dat.GUI();
+            gui.add( parameters, "rows", 1, 20,  1 ).onChange( sceneChanger );
+            gui.add( parameters, "columns", 1, 20, 1 ).onChange( sceneChanger );
+            gui.add( parameters, "depth", 1, 100, 1 ).onChange( sceneChanger );
+
+            var selectedImage = gui.addFolder("Image");
+            selectedImage.add(checkboxes.images, 'picasso').name('picasso').listen().onChange(function(){setChecked("picasso")});
+            selectedImage.add(checkboxes.images, 'monet').name('monet').listen().onChange(function(){setChecked("monet")});
+
+            function setChecked( prop ){
+                for (let param in checkboxes.images){
+                    checkboxes.images[param] = false;
+                }
+                checkboxes.images[prop] = true;
+                parameters.image = './images/' + prop + '.jpg';
+                sceneChanger();
+            }
+
+            var selectedAnimation = gui.addFolder("Animation");
+            selectedAnimation.add(checkboxes.animations, 'scroll').name('scroll').listen().onChange(function(){setCheckedAnimation("scroll")});
+            selectedAnimation.add(checkboxes.animations, 'gravity').name('gravity').listen().onChange(function(){setCheckedAnimation("gravity")});
+            selectedAnimation.add(checkboxes.animations, 'tetris').name('tetris').listen().onChange(function(){setCheckedAnimation("tetris")});
+
+            function setCheckedAnimation( prop ){
+                for (let param in checkboxes.animations){
+                    checkboxes.animations[param] = false;
+                }
+                checkboxes.animations[prop] = true;
+                parameters.animation = prop;
+                sceneChanger();
+            }
+
+            var selectedTransition = gui.addFolder("Transition");
+            selectedTransition.add(checkboxes.transitions, 'enter').name('enter').listen().onChange(function(){setCheckedTransition("enter")});
+            selectedTransition.add(checkboxes.transitions, 'exit').name('exit').listen().onChange(function(){setCheckedTransition("exit")});
+
+            function setCheckedTransition( prop ){
+                for (let param in checkboxes.transitions){
+                    checkboxes.transitions[param] = false;
+                }
+                checkboxes.transitions[prop] = true;
+                parameters.transition = prop;
+                sceneChanger();
+            }
+
+            $('.dg').css('zIndex', '1');
+            $('.dg').css('marginRight', '0px');
+
+            // fps ui
+            var stats = new Stats();
+            $(document.body).append( stats.dom );
+            updateStats();
+            function updateStats() {
+                stats.update();
+                requestAnimationFrame( updateStats );
+            }
         });
     </script>
 
 </head>
-
-<body>
-    <div style="position: absolute; z-index: 1;">Scroll up and down</div>
-</body>

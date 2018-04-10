@@ -1,4 +1,4 @@
-function Scene (dimensions, image, transitionType, depth) {
+function Scene (dimensions, imageTexture, animationType, depth, transitionType) {
 
     var $this = this;
     var camera, scene, light, wall, renderer, dom;
@@ -9,12 +9,11 @@ function Scene (dimensions, image, transitionType, depth) {
     var raycaster = new THREE.Raycaster();
     var mouse = new THREE.Vector2();
     var scrollDist = 0;
-    var size = {
-        width: 10,
-        //make into image aspect ratio
-        height: 10,
-        depth: depth,
-    };
+    var size = new THREE.Vector3(
+        (10 * imageTexture.image.width / imageTexture.image.height),
+        10,
+        depth/10,
+    );
 
     init ();
 
@@ -49,26 +48,43 @@ function Scene (dimensions, image, transitionType, depth) {
     };
 
     function setWall () {
-        wall = new Wall(image, size, dimensions);
+        wall = new Wall(imageTexture, size, dimensions);
         scene.add( wall.getObject() );
     };
 
     function setTransition () {
-        switch (transitionType) {
+        switch (animationType) {
             case "scroll":
-                transition = new Scroll($this, wall);
+                transition = new Scroll($this, wall, transitionType, getDropDistance());
                 break;
             case "gravity":
-                transition = new Gravity($this, wall);
+                transition = new Gravity($this, wall, transitionType, getDropDistance());
+                break
+            case "tetris":
+                transition = new Tetris($this, wall, transitionType, getDropDistance());
                 break
             default:
-                transition = new Scroll($this, wall);
+                transition = new Scroll($this, wall, transitionType, getDropDistance());
         };
     };
 
     function setCameraPosition() {
         var fov = THREE.Math.degToRad( camera.fov );
-        camera.position.z = (size.height / ( 2 * Math.tan (fov/2))) + size.depth/2
+        camera.position.z = (size.y / ( 2 * Math.tan (fov/2))) + size.z/2;
+    };
+
+    function getVerticalFovFront() {
+        return size.y;
+    };
+
+    function getVerticalFovBack() {
+        var fov = THREE.Math.degToRad( camera.fov );
+        workingDistance = Math.abs(camera.position.z) + size.z/2;
+        return (2 * workingDistance * Math.tan (fov/2));
+    };
+
+    function getDropDistance() {
+        return (size.y + getVerticalFovBack()) / 2;
     };
 
     function setSizeToWindow () {
@@ -79,23 +95,8 @@ function Scene (dimensions, image, transitionType, depth) {
         camera.updateProjectionMatrix();
         renderer.setSize( windowWidth, windowHeight );
 
-        // resize image when width is greater than height
-        // problem arrizes when raycasting because camera doesn't match mouse
-
-        // camera.aspect = 1;
-        // camera.updateProjectionMatrix();
-        //
-        // if (height > width) {
-        //     renderer.setSize( height, height );
-        //     var overflow = (height - width) / 2;
-        //     renderer.domElement.style.left = -overflow + "px";
-        //     renderer.domElement.style.top = "0px";
-        // } else {
-        //     renderer.setSize( width, width );
-        //     var overflow = (width - height) / 2;
-        //     renderer.domElement.style.top = -overflow + "px";
-        //     renderer.domElement.style.left = "0px";
-        // }
+        // resize scene by finding optimal rows and columns
+        // do resize in manager
     };
 
     function onMouseMove( event ) {
@@ -146,7 +147,7 @@ function Scene (dimensions, image, transitionType, depth) {
     };
 
     function updateScrollDistance (delta) {
-        scrollDist -= delta * size.height / windowHeight;
+        scrollDist -= delta * size.y / windowHeight;
         if (scrollDist < 0) {
             scrollDist = 0;
         }
@@ -159,16 +160,6 @@ function Scene (dimensions, image, transitionType, depth) {
     };
 
     function raycast() {
-        // var seconds = new Date().getTime() / 2000;
-
-        // make crazy into new animation class
-        // for ( var i = 0; i < rows; i++ ) {
-        //     for ( var j = 0; j < columns; j++ ) {
-        //         var cube = wall.getCubes()[i][j].getObject();
-        //         cube.position.z = Math.tan(seconds + cube.position.y + cube.position.x) / (Math.cos(seconds + cube.position.x));
-        //     }
-        // }
-
         // make raycaster get position of intersection closest to camera
     	// raycaster.setFromCamera( mouse, camera );
     	// var intersects = raycaster.intersectObjects( wall.group.children );
@@ -197,6 +188,19 @@ function Scene (dimensions, image, transitionType, depth) {
         window.removeEventListener( 'mousemove', onMouseMove, false );
         window.removeEventListener('mousewheel', onDocumentMouseWheel, false);
         window.removeEventListener('touchstart', onDocumentTouchStart, false);
+    };
+
+    this.dispose = function () {
+        $this.stop();
+        $(dom).remove();
+
+        // remove scene
+        // remove renderer
+        // remove Light();
+        // remove Camera();
+
+        wall.dispose()
+        transition.dispose();
     };
 
     this.getScrollDistance = function () {

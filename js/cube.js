@@ -46,6 +46,10 @@ function Cube (size, position, image, cropInfo) {
         }
     };
 
+    this.dispose = function () {
+
+    }
+
     this.setOriginalPosition = function () {
         object.position.set(position.x, position.y, position.z);
     };

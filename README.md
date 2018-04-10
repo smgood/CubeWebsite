@@ -1,21 +1,25 @@
-# CubeWebsite
-- Website made out of cubes with custom animation transitions
+# Cubism
+- Cubism is an easy to use, open source javascript library. It allows for the creation of full-screen, 3D scrolling websites, where each page is composed of cubes.
 - Demo: http://smgoodrich.com/CubeWebsiteV2/
 
-# To Do:
-- clean up code
-- pass parameters in index
-- create cube class
-  - support video, or image
-  - allow one image or each cube a separate image/video
-- create animations/transitions
-  - gravity, explode, pinpression, slideshow, scroll camera
-  - set animation speed. calculate & stop when complete
-- support multiple pages/animations (with scroll offset for 2nd and 3rd pages)
-- add support for images of different aspect ratios (not just 1:1)
-- option to set cube opacity and color (hex value, random, or match texture color)
-- add demo where user can alter number of columns,rows,image,color,animation
-- support full screen for horizontal screen
+# To Do
+## Must have features:
+1. clean up code
+2. dispose function
+3. support video
+4. create animations: none, swap, explode, pinpression, slideshow
+5. set animation speed
+6. support multiple pages/animations
+    - Set scroll distance offset for animation
+    - Dispose scene when scroll before or after (to minimize memory usage)
+7. option to set cube opacity, texture (shininess, metallic), and color (hex, random, or match image)
+8. Support full screen
+    - Figure out optimal amount of rows and columns based on window size, dimensions parameters, & image aspect ratio
+    - dispose and recreate scene on resize (in manager)
+9. support all browsers and mobile
 
-# Optional features:
-- support having cubes of different sizes in wall
+## Would like features:
+1. scroll bar and navigation dots
+2. support having cubes of different sizes in wall
+3. Allow one big image or each cube a separate image/video
+4. raycasting cube plays video / supports link
