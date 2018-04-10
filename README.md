@@ -1,5 +1,5 @@
 # Cubism
-- Cubism is an easy to use, open source javascript library. It allows for the creation of full-screen, 3D scrolling websites, where each page is composed of cubes.
+- Cubism is an easy to use, open source javascript library. Use it to create full-screen, 3D scrolling websites, composed entirely of cubes!
 - Demo: http://smgoodrich.com/CubeWebsiteV2/
 
 # To Do
@@ -9,6 +9,7 @@
 3. support video
 4. create animations: none, swap, explode, pinpression, slideshow
 5. set animation speed
+    - make function that takes in animation start and stop, page offset, and scroll speed and returns corresponding scroll distance
 6. support multiple pages/animations
     - Set scroll distance offset for animation
     - Dispose scene when scroll before or after (to minimize memory usage)
