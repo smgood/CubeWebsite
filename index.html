@@ -16,9 +16,9 @@ Sean
 
 -->
 
-    <title>Cubes</title>
+    <title>Cubism.js</title>
     <meta charset="utf-8">
-    <meta name="description" content="3D website to experiment with cube animations.">
+    <meta name="description" content="Cubism is an easy to use, open source javascript library. Use it to create full-screen, 3D scrolling websites, composed entirely of cubes!">
     <meta name="author" content="Sean Goodrich">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <meta name="keywords" content="Sean, Goodrich, webGL, cubes">
@@ -41,6 +41,7 @@ Sean
     <script src="js/wall.js"></script>
     <script src="js/cube.js"></script>
     <script src="js/face.js"></script>
+    <script src="js/constants.js"></script>
 
     <!-- animations -->
     <script src="js/animations/scroll.js"></script>
@@ -55,7 +56,7 @@ Sean
                 columns: 10,
                 depth: 10,
                 animation: 'gravity',
-                image: './images/picasso.jpg',
+                image: './images/stingray.mp4',
                 transition: 'exit',
             };
 
@@ -63,16 +64,17 @@ Sean
 
             // change parameters ui
             var checkboxes = {
-                animations: {
+                animation: {
                     scroll: false,
                     gravity: true,
                     tetris: false,
                 },
-                images: {
-                    picasso: true,
-                    monet: false,
+                image: {
+                    './images/stingray.mp4': true,
+                    './images/picasso.jpg': false,
+                    './images/beach.jpg': false,
                 },
-                transitions: {
+                transition: {
                     enter: false,
                     exit: true,
                 },
@@ -85,45 +87,28 @@ Sean
             var gui = new dat.GUI();
             gui.add( parameters, "rows", 1, 20,  1 ).onChange( sceneChanger );
             gui.add( parameters, "columns", 1, 20, 1 ).onChange( sceneChanger );
-            gui.add( parameters, "depth", 1, 100, 1 ).onChange( sceneChanger );
+            gui.add( parameters, "depth", 1, 100, 1 ).name('depth (%)').onChange( sceneChanger );
 
             var selectedImage = gui.addFolder("Image");
-            selectedImage.add(checkboxes.images, 'picasso').name('picasso').listen().onChange(function(){setChecked("picasso")});
-            selectedImage.add(checkboxes.images, 'monet').name('monet').listen().onChange(function(){setChecked("monet")});
-
-            function setChecked( prop ){
-                for (let param in checkboxes.images){
-                    checkboxes.images[param] = false;
-                }
-                checkboxes.images[prop] = true;
-                parameters.image = './images/' + prop + '.jpg';
-                sceneChanger();
-            }
+            selectedImage.add(checkboxes.image, './images/stingray.mp4').name('stingray').listen().onChange(function(){setChecked("image", "./images/stingray.mp4")});
+            selectedImage.add(checkboxes.image, './images/picasso.jpg').name('picasso').listen().onChange(function(){setChecked("image", "./images/picasso.jpg")});
+            selectedImage.add(checkboxes.image, './images/beach.jpg').name('beach').listen().onChange(function(){setChecked("image", "./images/beach.jpg")});
 
             var selectedAnimation = gui.addFolder("Animation");
-            selectedAnimation.add(checkboxes.animations, 'scroll').name('scroll').listen().onChange(function(){setCheckedAnimation("scroll")});
-            selectedAnimation.add(checkboxes.animations, 'gravity').name('gravity').listen().onChange(function(){setCheckedAnimation("gravity")});
-            selectedAnimation.add(checkboxes.animations, 'tetris').name('tetris').listen().onChange(function(){setCheckedAnimation("tetris")});
-
-            function setCheckedAnimation( prop ){
-                for (let param in checkboxes.animations){
-                    checkboxes.animations[param] = false;
-                }
-                checkboxes.animations[prop] = true;
-                parameters.animation = prop;
-                sceneChanger();
-            }
+            selectedAnimation.add(checkboxes.animation, 'scroll').name('scroll').listen().onChange(function(){setChecked("animation", "scroll")});
+            selectedAnimation.add(checkboxes.animation, 'gravity').name('gravity').listen().onChange(function(){setChecked("animation", "gravity")});
+            selectedAnimation.add(checkboxes.animation, 'tetris').name('tetris').listen().onChange(function(){setChecked("animation", "tetris")});
 
             var selectedTransition = gui.addFolder("Transition");
-            selectedTransition.add(checkboxes.transitions, 'enter').name('enter').listen().onChange(function(){setCheckedTransition("enter")});
-            selectedTransition.add(checkboxes.transitions, 'exit').name('exit').listen().onChange(function(){setCheckedTransition("exit")});
+            selectedTransition.add(checkboxes.transition, 'enter').name('enter').listen().onChange(function(){setChecked("transition", "enter")});
+            selectedTransition.add(checkboxes.transition, 'exit').name('exit').listen().onChange(function(){setChecked("transition", "exit")});
 
-            function setCheckedTransition( prop ){
-                for (let param in checkboxes.transitions){
-                    checkboxes.transitions[param] = false;
+            function setChecked(prop, selected ){
+                for (let param in checkboxes[prop]){
+                    checkboxes[prop][param] = false;
                 }
-                checkboxes.transitions[prop] = true;
-                parameters.transition = prop;
+                checkboxes[prop][selected] = true;
+                parameters[prop] = selected;
                 sceneChanger();
             }
 
@@ -138,7 +123,24 @@ Sean
                 stats.update();
                 requestAnimationFrame( updateStats );
             }
+
+            // hide scroll texture
+            window.addEventListener('mousewheel', hideText, false);
+            window.addEventListener('touchstart', hideText, false);
+
+            var text = $('#scroll_text');
+            function hideText() {
+                if (text.is(":visible")) {
+                    text.fadeOut();
+                }
+            }
         });
     </script>
 
 </head>
+
+<body>
+    <div id="scroll_text" style="position: absolute; z-index: 1; width: 100%; top:50%; text-align: center; color:white;">
+        SCROLL UP AND DOWN
+    </div>
+</body>

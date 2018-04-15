@@ -8,15 +8,15 @@ function Cube (size, position, image, cropInfo) {
         var geometry = new THREE.BoxGeometry( size.x, size.y, size.z );
         cropTexture(geometry, face.front, cropInfo);
 
-        image.minFilter = THREE.LinearFilter;
         var imageMaterial = new THREE.MeshBasicMaterial({
             map : image
         });
 
-        var colorMaterial = new THREE.MeshBasicMaterial({
+        var colorMaterial = new THREE.MeshPhongMaterial({
             color : '#'+(Math.random()*0xFFFFFF<<0).toString(16),
             transparent : true,
-            opacity : 0.5
+            opacity : 0.5,
+            shininess: 70,
         });
 
         var materials = [];

@@ -1,4 +1,4 @@
-function Scene (dimensions, imageTexture, animationType, depth, transitionType) {
+function Scene (dimensions, imageTexture, animationType, depth, transitionType, imageAspect) {
 
     var $this = this;
     var camera, scene, light, wall, renderer, dom;
@@ -10,7 +10,7 @@ function Scene (dimensions, imageTexture, animationType, depth, transitionType) 
     var mouse = new THREE.Vector2();
     var scrollDist = 0;
     var size = new THREE.Vector3(
-        (10 * imageTexture.image.width / imageTexture.image.height),
+        (10 * imageAspect),
         10,
         depth/10,
     );

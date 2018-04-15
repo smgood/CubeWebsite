@@ -8,17 +8,29 @@
 // transition - whether animation occurs on entrance or exit
 function Manager (parameters = {}) {
 
-    // make image into images, an array of images
-    var player, loadedImage;
-
     var parent, columns, rows, animation, depth, image, transition;
-    var dimensions;
+    var scene, dimensions, getAspectRatio;
+
+    var textures = [];
+    var loaded = 0;
+    var total = 1;
+    var video;
 
     init ();
 
     function init () {
         readParameters();
-        loadImages();
+
+        var extension = image.split('.').pop();
+        if (extensions.image.includes(extension)){
+            getAspectRatio = getImageAspectRatio;
+            loadImage();
+        } else if (extensions.video.includes(extension)) {
+            getAspectRatio = getVideoAspectRatio;
+            loadVideo();
+        } else {
+            console.log ('file extension not supported');
+        }
     };
 
     function readParameters (){
@@ -29,30 +41,24 @@ function Manager (parameters = {}) {
             depth = parameters.depth || 10;
             image = parameters.image || './images/picasso.jpg';
             transition = parameters.transition || 'exit';
-            
+
             dimensions = {
                 rows: rows,
                 columns: columns
             };
     };
 
-    function loadImages () {
-        var loaded = 0;
-        var total = 1;
-
+    function loadImage () {
         var loader = new THREE.TextureLoader();
         loader.load( image,
 
             // onLoad callback
-            function ( LoadedImage ) {
+            function ( imageTexture ) {
                 loaded ++;
-                console.log(loaded + "\/" + total + " files loaded \(" + LoadedImage.image.src + "\)");
-                loadedImage = LoadedImage;
+                console.log(loaded + "\/" + total + " files loaded \(" + imageTexture.image.src + "\)");
 
-                console.log( 'Loading complete!');
-                scene = new Scene(dimensions, loadedImage, animation, depth, transition);
-                scene.play();
-                parent.append( scene.getDomElement() );
+                textures.push(imageTexture);
+                createScene (imageTexture);
             },
 
             // onProgress callback currently not supported
@@ -64,6 +70,60 @@ function Manager (parameters = {}) {
             },
         );
     };
+
+    function loadVideo () {
+        var video = document.createElement('video');
+
+        video.onloadeddata = loadingManager;
+        video.onerror = errorManager;
+
+        video.autoplay=true;
+        video.preload = 'auto';
+        video.loop=true;
+        video.muted=true;
+
+        video.setAttribute('crossorigin', 'anonymous');
+        video.setAttribute('playsinline','');
+
+        var source = document.createElement('source');
+        source.src = image;
+        video.appendChild(source);
+        //source.type = "video/mp4";
+
+        function loadingManager () {
+            loaded ++;
+            console.log(loaded + "\/" + total + " files loaded \(" + source.src + "\)");
+
+            var videoTexture = new THREE.VideoTexture( video );
+            textures.push(videoTexture);
+            createScene (videoTexture);
+        };
+
+        function errorManager () {
+            console.log( 'There was an error loading ' + source.src );
+        };
+    };
+
+    function createScene (texture) {
+        console.log( 'Loading complete!');
+        var aspectRatio = getAspectRatio (texture)
+
+        texture.minFilter = THREE.LinearFilter;
+        texture.magFilter = THREE.LinearFilter;
+        texture.format = THREE.RGBFormat;
+
+        scene = new Scene(dimensions, texture, animation, depth, transition, aspectRatio);
+        scene.play();
+        parent.append( scene.getDomElement() );
+    }
+
+    function getVideoAspectRatio (videoTexture) {
+        return videoTexture.image.videoWidth / videoTexture.image.videoHeight;
+    }
+
+    function getImageAspectRatio (imageTexture) {
+        return imageTexture.image.width / imageTexture.image.height;
+    }
 
     this.play = function () {
         scene.play();
