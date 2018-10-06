@@ -13,14 +13,14 @@ function Cube (size, position, image, cropInfo) {
         });
 
         var colorMaterial = new THREE.MeshPhongMaterial({
-            color : '#'+(Math.random()*0xFFFFFF<<0).toString(16),
+            color : new THREE.Color( Math.random() * 0xffffff ),
             transparent : true,
             opacity : 0.5,
             shininess: 70,
         });
 
         var materials = [];
-        for ( var i = 0; i < 6; i ++ ) {
+        for (var i = 0; i < 6; i ++) {
             if (i == 4) {
                 materials.push( imageMaterial );
             } else {
@@ -28,7 +28,7 @@ function Cube (size, position, image, cropInfo) {
             }
         }
 
-        object = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial(materials));
+        object = new THREE.Mesh( geometry, materials);
         object.position.set(position.x, position.y, position.z);
     };
 
@@ -47,7 +47,10 @@ function Cube (size, position, image, cropInfo) {
     };
 
     this.dispose = function () {
-
+        object.geometry.dispose();
+        for (var i = 0; i < object.material.length; i++) {
+            object.material[i].dispose();
+        }
     }
 
     this.setOriginalPosition = function () {

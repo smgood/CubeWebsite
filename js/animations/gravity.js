@@ -98,8 +98,4 @@ function Gravity (scene, wall, transition, dropDistance) {
     this.stop = function () {
         cancelAnimationFrame( animationRequest );
     };
-
-    this.dispose = function () {
-
-    };
 };

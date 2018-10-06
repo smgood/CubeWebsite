@@ -76,6 +76,7 @@ function Manager (parameters = {}) {
 
         video.onloadeddata = loadingManager;
         video.onerror = errorManager;
+        video.oncanplaythrough = playVideo;
 
         video.autoplay=true;
         video.preload = 'auto';
@@ -89,6 +90,10 @@ function Manager (parameters = {}) {
         source.src = image;
         video.appendChild(source);
         //source.type = "video/mp4";
+
+        function playVideo () {
+            video.play();
+        };
 
         function loadingManager () {
             loaded ++;

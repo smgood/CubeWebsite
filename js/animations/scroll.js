@@ -1,4 +1,4 @@
-function Scroll (scene, wall, transition, dropHeight) {
+function Scroll (scene, wall, transition, dropDistance) {
 
     var animationRequest, scrollDist;
     var scrollAnimation;
@@ -23,8 +23,8 @@ function Scroll (scene, wall, transition, dropHeight) {
     };
 
     function scrollEnterAnimation () {
-        if (scrollDist < dropHeight){
-            wall.getObject().position.y = scrollDist - dropHeight;
+        if (scrollDist < dropDistance){
+            wall.getObject().position.y = scrollDist - dropDistance;
         } else {
             wall.getObject().position.y = 0;
         }
@@ -40,9 +40,5 @@ function Scroll (scene, wall, transition, dropHeight) {
 
     this.stop = function () {
         cancelAnimationFrame( animationRequest );
-    };
-
-    this.dispose = function () {
-
     };
 };

@@ -10,7 +10,7 @@ function Scene (dimensions, imageTexture, animationType, depth, transitionType, 
     var mouse = new THREE.Vector2();
     var scrollDist = 0;
     var size = new THREE.Vector3(
-        (10 * imageAspect),
+        10*imageAspect,
         10,
         depth/10,
     );
@@ -194,13 +194,9 @@ function Scene (dimensions, imageTexture, animationType, depth, transitionType, 
         $this.stop();
         $(dom).remove();
 
-        // remove scene
-        // remove renderer
-        // remove Light();
-        // remove Camera();
-
-        wall.dispose()
-        transition.dispose();
+        wall.dispose();
+        scene.remove(wall.getObject());
+        scene.remove(light);
     };
 
     this.getScrollDistance = function () {

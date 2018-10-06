@@ -109,14 +109,8 @@ function Tetris (scene, wall, transition, dropDistance) {
         }
     };
 
-    function addInstruction (completedMoves) {
-        var tetrisPiece = new THREE.Group();
-        wall.getObject().add(tetrisPiece);
-        for (var i = 0; i < completedMoves.length; i++) {
-            tetrisPiece.add(cubes[completedMoves[i].x][completedMoves[i].y].getObject());
-        }
-
-        var distance = getTetrisDistance(completedMoves);
+    function addInstruction (tetrisPiece) {
+        var distance = getTetrisDistance(tetrisPiece);
         var startTime = instructions.length ? (instructions[instructions.length -1].endTime) : 0;
         var endTime = startTime + distance;
         instructions.push({tetrisPiece, distance, startTime, endTime});
@@ -175,12 +169,12 @@ function Tetris (scene, wall, transition, dropDistance) {
         for (var i = 0; i < instructions.length; i++) {
             if (scrollDist > instructions[i].startTime) {
                 if (scrollDist > instructions[i].endTime) {
-                    instructions[i].tetrisPiece.position.y = 0;
+                    setTetrisPiecePosition(instructions[i].tetrisPiece, 0);
                 } else {
-                    instructions[i].tetrisPiece.position.y = instructions[i].endTime - scrollDist;
+                    setTetrisPiecePosition(instructions[i].tetrisPiece, instructions[i].endTime - scrollDist);
                 }
             } else {
-                instructions[i].tetrisPiece.position.y = instructions[i].distance;
+                setTetrisPiecePosition(instructions[i].tetrisPiece, instructions[i].distance);
             }
         }
     };
@@ -189,13 +183,21 @@ function Tetris (scene, wall, transition, dropDistance) {
         for (var i = 0; i < instructions.length; i++) {
             if (scrollDist > instructions[i].startTime) {
                 if (scrollDist > instructions[i].endTime) {
-                    instructions[i].tetrisPiece.position.y = -instructions[i].distance;
+                    setTetrisPiecePosition(instructions[i].tetrisPiece, -instructions[i].distance);
                 } else {
-                    instructions[i].tetrisPiece.position.y = instructions[i].startTime - scrollDist;
+                    setTetrisPiecePosition(instructions[i].tetrisPiece, instructions[i].startTime - scrollDist);
                 }
             } else {
-                instructions[i].tetrisPiece.position.y = 0;
+                setTetrisPiecePosition(instructions[i].tetrisPiece, 0);
             }
+        }
+    };
+
+    function setTetrisPiecePosition (tetrisPiece, offset) {
+        for (var i = 0; i < tetrisPiece.length; i++) {
+            cubes[tetrisPiece[i].x][tetrisPiece[i].y].setPositionFromOriginal(
+                new THREE.Vector3(0, offset, 0)
+            );
         }
     };
 
@@ -205,9 +207,5 @@ function Tetris (scene, wall, transition, dropDistance) {
 
     this.stop = function () {
         cancelAnimationFrame( animationRequest );
-    };
-
-    this.dispose = function () {
-
     };
 };

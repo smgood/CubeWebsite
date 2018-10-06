@@ -48,7 +48,13 @@ function Wall (image, wallSize, dimensions) {
     };
 
     this.dispose = function () {
-
+        for (var i = 0; i < columns; i++) {
+            for (var j = 0; j < rows; j++) {
+                group.remove(cubes[i][j].getObject())
+                cubes[i][j].dispose();
+                delete cubes[i][j];
+            }
+        }
     };
 
     this.getDimensions = function () {
