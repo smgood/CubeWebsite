@@ -1,5 +1,4 @@
-function Scene (dimensions, imageTexture, animationType, depth, transitionType, imageAspect) {
-
+function Scene (dimensions, primaryImage, secondaryImage, animationType, depth, transitionType, scrollManager, start, end) {
     var $this = this;
     var camera, scene, light, wall, renderer, dom;
     var windowWidth, windowHeight;
@@ -10,7 +9,7 @@ function Scene (dimensions, imageTexture, animationType, depth, transitionType, 
     var mouse = new THREE.Vector2();
     var scrollDist = 0;
     var size = new THREE.Vector3(
-        10*imageAspect,
+        10*getAspectRatio(primaryImage),
         10,
         depth/10,
     );
@@ -48,23 +47,27 @@ function Scene (dimensions, imageTexture, animationType, depth, transitionType, 
     };
 
     function setWall () {
-        wall = new Wall(imageTexture, size, dimensions);
+        wall = new Wall(primaryImage, size, dimensions);
         scene.add( wall.getObject() );
     };
 
     function setTransition () {
         switch (animationType) {
-            case "scroll":
-                transition = new Scroll($this, wall, transitionType, getDropDistance());
-                break;
             case "gravity":
-                transition = new Gravity($this, wall, transitionType, getDropDistance());
-                break
+                transition = new Gravity(scrollManager, wall, transitionType, getDropDistance() + accountForCubeDiagonal(), start, end);
+                break;
+            case "scroll":
+                transition = new Scroll(scrollManager, wall, transitionType, getDropDistance(), start, end);
+                break;
             case "tetris":
-                transition = new Tetris($this, wall, transitionType, getDropDistance());
-                break
+                transition = new Tetris(scrollManager, wall, transitionType, getDropDistance(), start, end);
+                break;
+            case "swap":
+                var aspectRatioDiff  = getAspectRatio(secondaryImage) / getAspectRatio(primaryImage);
+                transition = new Swap(scrollManager, wall, secondaryImage, aspectRatioDiff, start, end);
+                break;
             default:
-                transition = new Scroll($this, wall, transitionType, getDropDistance());
+                transition = new Scroll(scrollManager, wall, transitionType, getDropDistance());
         };
     };
 
@@ -83,6 +86,17 @@ function Scene (dimensions, imageTexture, animationType, depth, transitionType, 
         return (2 * workingDistance * Math.tan (fov/2));
     };
 
+    // Diagonal is longest line across cube
+    function accountForCubeDiagonal(){
+        var cubeSize = wall.getCubeSize();
+        var cubeDiagonal = Math.sqrt(
+            Math.pow(cubeSize.x, 2) +
+            Math.pow(cubeSize.y, 2) +
+            Math.pow(cubeSize.z, 2)
+        );
+        return (cubeDiagonal - cubeSize.y)/2
+    };
+
     function getDropDistance() {
         return (size.y + getVerticalFovBack()) / 2;
     };
@@ -99,58 +113,21 @@ function Scene (dimensions, imageTexture, animationType, depth, transitionType, 
         // do resize in manager
     };
 
+    function getAspectRatio (texture) {
+        return getVideoAspectRatio(texture) || getImageAspectRatio(texture);
+    }
+
+    function getVideoAspectRatio (videoTexture) {
+        return videoTexture.image.videoWidth / videoTexture.image.videoHeight;
+    }
+
+    function getImageAspectRatio (imageTexture) {
+        return imageTexture.image.width / imageTexture.image.height;
+    }
+
     function onMouseMove( event ) {
     	mouse.x = ( event.clientX / windowWidth ) * 2 - 1;
     	mouse.y = - ( event.clientY / windowHeight ) * 2 + 1;
-    };
-
-    function onDocumentMouseWheel( event ) {
-        updateScrollDistance (event.wheelDeltaY * 0.05);
-    };
-
-    function onDocumentTouchStart( event ) {
-        event.preventDefault();
-        cancelAnimationFrame( touchSlideRequest );
-
-        var touchStart = event.touches[0].clientY;
-        var touchDistance = 0;
-
-        function touchMove(event) {
-            event.preventDefault();
-
-            touchDistance = event.touches[0].clientY - touchStart;
-            updateScrollDistance (touchDistance);
-            touchStart = event.touches[0].clientY;
-        };
-
-        function touchEnd(event) {
-            event.preventDefault();
-            touchSlideRequest = requestAnimationFrame( slide );
-
-            window.removeEventListener('touchmove', touchMove, false);
-            window.removeEventListener('touchend', touchEnd, false);
-        };
-
-        function slide () {
-            touchDistance *= 0.92;
-            updateScrollDistance (touchDistance);
-
-            if (Math.abs(touchDistance) > .1) {
-                touchSlideRequest = requestAnimationFrame( slide );
-            } else {
-                cancelAnimationFrame( touchSlideRequest );
-            }
-        };
-
-        window.addEventListener('touchmove', touchMove, false);
-        window.addEventListener('touchend', touchEnd, false);
-    };
-
-    function updateScrollDistance (delta) {
-        scrollDist -= delta * size.y / windowHeight;
-        if (scrollDist < 0) {
-            scrollDist = 0;
-        }
     };
 
     function animate() {
@@ -176,8 +153,6 @@ function Scene (dimensions, imageTexture, animationType, depth, transitionType, 
 
         window.addEventListener( 'resize', setSizeToWindow);
         window.addEventListener( 'mousemove', onMouseMove, false );
-        window.addEventListener('mousewheel', onDocumentMouseWheel, false);
-        window.addEventListener('touchstart', onDocumentTouchStart, false);
     };
 
     this.stop = function () {
@@ -186,8 +161,6 @@ function Scene (dimensions, imageTexture, animationType, depth, transitionType, 
 
         window.removeEventListener( 'resize', setSizeToWindow);
         window.removeEventListener( 'mousemove', onMouseMove, false );
-        window.removeEventListener('mousewheel', onDocumentMouseWheel, false);
-        window.removeEventListener('touchstart', onDocumentTouchStart, false);
     };
 
     this.dispose = function () {

@@ -4,19 +4,19 @@
 
 # To Do
 ## Must have features:
-1. dispose function
-2. create animations: none, swap, explode, pinpression, slideshow
-3. set animation speed
-    - make function that takes in animation start and stop, page offset, and scroll speed and returns corresponding scroll distance
-4. support multiple pages/animations
+1. animations ideas: none, explode, pinpression (moves in z axis, rotates to mouse, mouse is repulsive magnet), slideshow, zipper
+2. support multiple pages/animations
     - Set scroll distance offset for animation
-    - Dispose scene when scroll before or after (to minimize memory usage)
-5. option to set cube opacity, texture (shininess, metallic), and color (hex, random, or match image)
-6. Support full screen
+    - Stop scene (or dispose) when scroll before or after
+3. option to set cube opacity, texture (shininess, metallic), and color (hex, random, or match image)
+4. Support full screen
     - Figure out optimal amount of rows and columns based on window size, dimensions parameters, & image aspect ratio
     - dispose and recreate scene on resize (in manager)
-7. support all browsers and mobile
-8. Keep code clean & readable
+5. support all browsers and mobile (make play button for videos)
+6. improve dispose functionality to remove all memory leaks
+7. Keep code clean & readable
+8. make depth relative to cube size instead of wall
+9. Make all scenes into 1 scene and use layers
 
 ## Would like features:
 1. scroll bar and navigation dots

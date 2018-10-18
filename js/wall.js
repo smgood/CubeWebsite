@@ -30,7 +30,7 @@ function Wall (image, wallSize, dimensions) {
                     0
                 );
 
-                cropInfo = new CropInfo (
+                var cropInfo = new CropInfo (
                     1/columns,
                     1/rows,
                     i/columns,
@@ -75,5 +75,24 @@ function Wall (image, wallSize, dimensions) {
 
     this.getObject = function () {
         return group;
+    };
+
+    // functions for secondary image
+    this.getCropInfoWide = function (secondImagePos, aspectRatioDiff) {
+        return new CropInfo (
+            1/(columns * aspectRatioDiff),
+            1/rows,
+            (aspectRatioDiff - 1) / 2 + secondImagePos.x/(columns * aspectRatioDiff),
+            secondImagePos.y/rows
+        );
+    };
+
+    this.getCropInfoTall = function (secondImagePos, aspectRatioDiff) {
+        return new CropInfo (
+            1/columns,
+            aspectRatioDiff/rows,
+            secondImagePos.x/columns,
+            (1/aspectRatioDiff - 1) / 2 + (aspectRatioDiff*secondImagePos.y)/rows
+        );
     };
 };

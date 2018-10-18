@@ -1,4 +1,4 @@
-function Scroll (scene, wall, transition, dropDistance) {
+function Scroll (scrollManager, wall, transition, dropDistance, start, end) {
 
     var animationRequest, scrollDist;
     var scrollAnimation;
@@ -14,8 +14,8 @@ function Scroll (scene, wall, transition, dropDistance) {
     };
 
     function animate () {
-        if (scrollDist != scene.getScrollDistance ()) {
-            scrollDist = scene.getScrollDistance ();
+        if (scrollDist != scrollManager.getRelativeScrollDistance(start, end, dropDistance)) {
+            scrollDist = scrollManager.getRelativeScrollDistance (start, end, dropDistance);
             scrollAnimation();
         }
 

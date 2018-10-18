@@ -4,32 +4,31 @@
 // rows - number of cube rows
 // animation - type of user scroll animation
 // depth - depth size of each cube
-// image - file path of image to be used as texture for cubes
+// primaryImage - file path of image to be used as texture for cubes
+// secondaryImage - file path of image that may be used for some animations
 // transition - whether animation occurs on entrance or exit
+// start - when animation begins
+// end - when animation stops
 function Manager (parameters = {}) {
 
-    var parent, columns, rows, animation, depth, image, transition;
-    var scene, dimensions, getAspectRatio;
+    var parent, columns, rows, animation, depth, primaryImage, secondaryImage, transition, start, end;
+    var scene, dimensions, scrollManager;
+    var primaryTexture, secondaryTexture;
 
-    var textures = [];
     var loaded = 0;
     var total = 1;
-    var video;
 
     init ();
 
     function init () {
-        readParameters();
+        scrollManager = new Mousewheel();
+        scrollManager.play();
 
-        var extension = image.split('.').pop();
-        if (extensions.image.includes(extension)){
-            getAspectRatio = getImageAspectRatio;
-            loadImage();
-        } else if (extensions.video.includes(extension)) {
-            getAspectRatio = getVideoAspectRatio;
-            loadVideo();
-        } else {
-            console.log ('file extension not supported');
+        readParameters();
+        createTexture(primaryImage);
+        if (requiresSecondaryImage(animation)){
+            total++;
+            createTexture(secondaryImage);
         }
     };
 
@@ -39,8 +38,11 @@ function Manager (parameters = {}) {
             columns = parameters.columns || 10;
             animation = parameters.animation || "scroll";
             depth = parameters.depth || 10;
-            image = parameters.image || './images/picasso.jpg';
+            primaryImage = parameters.image || parameters.primaryImage || './images/picasso.jpg';
+            secondaryImage = parameters.secondaryImage || './images/picasso.jpg';
             transition = parameters.transition || 'exit';
+            start = parameters.start || 0;
+            end = parameters.end || 10;
 
             dimensions = {
                 rows: rows,
@@ -48,17 +50,40 @@ function Manager (parameters = {}) {
             };
     };
 
-    function loadImage () {
+    function createTexture(imageSrc) {
+        var extension = imageSrc.split('.').pop();
+        if (extensions.image.includes(extension)){
+            loadImage(imageSrc);
+        } else if (extensions.video.includes(extension)) {
+            loadVideo(imageSrc);
+        } else {
+            console.log ('file extension not supported');
+        }
+    };
+
+    function requiresSecondaryImage(animation) {
+        return animation == "swap";
+    }
+
+    function loadImage (imageSrc) {
         var loader = new THREE.TextureLoader();
-        loader.load( image,
+        loader.load( imageSrc,
 
             // onLoad callback
             function ( imageTexture ) {
                 loaded ++;
                 console.log(loaded + "\/" + total + " files loaded \(" + imageTexture.image.src + "\)");
 
-                textures.push(imageTexture);
-                createScene (imageTexture);
+                if (primaryImage == imageSrc) {
+                    primaryTexture = imageTexture;
+                }
+                if (secondaryImage == imageSrc) {
+                    secondaryTexture = imageTexture;
+                }
+
+                if (loaded == total) {
+                    createScene ();
+                }
             },
 
             // onProgress callback currently not supported
@@ -71,12 +96,12 @@ function Manager (parameters = {}) {
         );
     };
 
-    function loadVideo () {
+    function loadVideo (videoSrc) {
         var video = document.createElement('video');
 
-        video.onloadeddata = loadingManager;
+        video.onloadedmetadata = loadingManager;
         video.onerror = errorManager;
-        video.oncanplaythrough = playVideo;
+        video.oncanplay = playVideo;
 
         video.autoplay=true;
         video.preload = 'auto';
@@ -87,7 +112,7 @@ function Manager (parameters = {}) {
         video.setAttribute('playsinline','');
 
         var source = document.createElement('source');
-        source.src = image;
+        source.src = videoSrc;
         video.appendChild(source);
         //source.type = "video/mp4";
 
@@ -98,10 +123,18 @@ function Manager (parameters = {}) {
         function loadingManager () {
             loaded ++;
             console.log(loaded + "\/" + total + " files loaded \(" + source.src + "\)");
-
             var videoTexture = new THREE.VideoTexture( video );
-            textures.push(videoTexture);
-            createScene (videoTexture);
+
+            if (primaryImage == videoSrc){
+                primaryTexture = videoTexture;
+            }
+            if (secondaryImage == videoSrc){
+                secondaryTexture = videoTexture;
+            }
+
+            if (loaded == total) {
+                createScene ();
+            }
         };
 
         function errorManager () {
@@ -109,32 +142,32 @@ function Manager (parameters = {}) {
         };
     };
 
-    function createScene (texture) {
+    function createScene () {
         console.log( 'Loading complete!');
-        var aspectRatio = getAspectRatio (texture)
 
+        setTextureFormat(primaryTexture);
+        if (secondaryTexture) {
+            setTextureFormat(secondaryTexture);
+        }
+
+        scene = new Scene(dimensions, primaryTexture, secondaryTexture, animation, depth, transition, scrollManager, start, end);
+        scene.play();
+        parent.append( scene.getDomElement() );
+    };
+
+    function setTextureFormat (texture) {
         texture.minFilter = THREE.LinearFilter;
         texture.magFilter = THREE.LinearFilter;
         texture.format = THREE.RGBFormat;
-
-        scene = new Scene(dimensions, texture, animation, depth, transition, aspectRatio);
-        scene.play();
-        parent.append( scene.getDomElement() );
-    }
-
-    function getVideoAspectRatio (videoTexture) {
-        return videoTexture.image.videoWidth / videoTexture.image.videoHeight;
-    }
-
-    function getImageAspectRatio (imageTexture) {
-        return imageTexture.image.width / imageTexture.image.height;
     }
 
     this.play = function () {
+        scrollManager.play();
         scene.play();
     };
 
     this.stop = function () {
+        scrollManager.stop();
         scene.stop();
     };
 

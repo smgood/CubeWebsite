@@ -1,12 +1,12 @@
 function Cube (size, position, image, cropInfo) {
 
-    var object;
+    var object, geometry, materials;
 
     init ();
 
     function init () {
-        var geometry = new THREE.BoxGeometry( size.x, size.y, size.z );
-        cropTexture(geometry, face.front, cropInfo);
+        geometry = new THREE.BoxGeometry( size.x, size.y, size.z );
+        cropTexture(geometry, side.front.face, cropInfo);
 
         var imageMaterial = new THREE.MeshBasicMaterial({
             map : image
@@ -19,7 +19,7 @@ function Cube (size, position, image, cropInfo) {
             shininess: 70,
         });
 
-        var materials = [];
+        materials = [];
         for (var i = 0; i < 6; i ++) {
             if (i == 4) {
                 materials.push( imageMaterial );
@@ -45,6 +45,16 @@ function Cube (size, position, image, cropInfo) {
             uv.y = ( uv.y * cropInfo.unitY ) + cropInfo.offsetY;
         }
     };
+
+    this.addSecondaryImage = function (secondaryImage, secondaryCropInfo, secondarySide) {
+        cropTexture(geometry, secondarySide.face, secondaryCropInfo);
+
+        var imageMaterial = new THREE.MeshBasicMaterial({
+            map : secondaryImage
+        });
+
+        materials[secondarySide.index] = imageMaterial;
+    }
 
     this.dispose = function () {
         object.geometry.dispose();

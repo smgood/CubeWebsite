@@ -37,6 +37,7 @@ Sean
 
     <!-- scene -->
     <script src="js/manager.js"></script>
+    <script src="js/mousewheel.js"></script>
     <script src="js/scene.js"></script>
     <script src="js/wall.js"></script>
     <script src="js/cube.js"></script>
@@ -44,8 +45,9 @@ Sean
     <script src="js/constants.js"></script>
 
     <!-- animations -->
-    <script src="js/animations/scroll.js"></script>
     <script src="js/animations/gravity.js"></script>
+    <script src="js/animations/scroll.js"></script>
+    <script src="js/animations/swap.js"></script>
     <script src="js/animations/tetris.js"></script>
 
     <script>
@@ -57,7 +59,10 @@ Sean
                 depth: 10,
                 animation: 'gravity',
                 image: './images/stingray.mp4',
+                secondaryImage: './images/picasso.jpg',
                 transition: 'exit',
+                start: 0,
+                end: 10
             };
 
             var manager = new Manager(parameters);
@@ -65,11 +70,17 @@ Sean
             // change parameters ui
             var checkboxes = {
                 animation: {
-                    scroll: false,
                     gravity: true,
+                    scroll: false,
+                    swap: false,
                     tetris: false,
                 },
                 image: {
+                    './images/stingray.mp4': true,
+                    './images/picasso.jpg': false,
+                    './images/beach.jpg': false,
+                },
+                secondaryImage: {
                     './images/stingray.mp4': true,
                     './images/picasso.jpg': false,
                     './images/beach.jpg': false,
@@ -87,16 +98,23 @@ Sean
             var gui = new dat.GUI();
             gui.add( parameters, "rows", 1, 20,  1 ).onChange( sceneChanger );
             gui.add( parameters, "columns", 1, 20, 1 ).onChange( sceneChanger );
-            gui.add( parameters, "depth", 1, 100, 1 ).name('depth (%)').onChange( sceneChanger );
+            gui.add( parameters, "depth", 1, 20, 1 ).name('depth (%)').onChange( sceneChanger );
+            gui.add( parameters, "end", 1, 20, 1 ).name('speed').onChange( sceneChanger );
 
-            var selectedImage = gui.addFolder("Image");
-            selectedImage.add(checkboxes.image, './images/stingray.mp4').name('stingray').listen().onChange(function(){setChecked("image", "./images/stingray.mp4")});
-            selectedImage.add(checkboxes.image, './images/picasso.jpg').name('picasso').listen().onChange(function(){setChecked("image", "./images/picasso.jpg")});
-            selectedImage.add(checkboxes.image, './images/beach.jpg').name('beach').listen().onChange(function(){setChecked("image", "./images/beach.jpg")});
+            var selectedPrimaryImage = gui.addFolder("Primary Image");
+            selectedPrimaryImage.add(checkboxes.image, './images/stingray.mp4').name('stingray').listen().onChange(function(){setChecked("image", "./images/stingray.mp4")});
+            selectedPrimaryImage.add(checkboxes.image, './images/picasso.jpg').name('picasso').listen().onChange(function(){setChecked("image", "./images/picasso.jpg")});
+            selectedPrimaryImage.add(checkboxes.image, './images/beach.jpg').name('beach').listen().onChange(function(){setChecked("image", "./images/beach.jpg")});
+
+            var selectedSecondaryImage = gui.addFolder("Secondary Image");
+            selectedSecondaryImage.add(checkboxes.secondaryImage, './images/stingray.mp4').name('stingray').listen().onChange(function(){setChecked("secondaryImage", "./images/stingray.mp4")});
+            selectedSecondaryImage.add(checkboxes.secondaryImage, './images/picasso.jpg').name('picasso').listen().onChange(function(){setChecked("secondaryImage", "./images/picasso.jpg")});
+            selectedSecondaryImage.add(checkboxes.secondaryImage, './images/beach.jpg').name('beach').listen().onChange(function(){setChecked("secondaryImage", "./images/beach.jpg")});
 
             var selectedAnimation = gui.addFolder("Animation");
-            selectedAnimation.add(checkboxes.animation, 'scroll').name('scroll').listen().onChange(function(){setChecked("animation", "scroll")});
             selectedAnimation.add(checkboxes.animation, 'gravity').name('gravity').listen().onChange(function(){setChecked("animation", "gravity")});
+            selectedAnimation.add(checkboxes.animation, 'scroll').name('scroll').listen().onChange(function(){setChecked("animation", "scroll")});
+            selectedAnimation.add(checkboxes.animation, 'swap').name('swap').listen().onChange(function(){setChecked("animation", "swap")});
             selectedAnimation.add(checkboxes.animation, 'tetris').name('tetris').listen().onChange(function(){setChecked("animation", "tetris")});
 
             var selectedTransition = gui.addFolder("Transition");

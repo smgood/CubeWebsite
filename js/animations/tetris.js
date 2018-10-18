@@ -1,9 +1,9 @@
-function Tetris (scene, wall, transition, dropDistance) {
+function Tetris (scrollManager, wall, transition, dropDistance, start, end) {
 
-    // add set duration input
     var animationRequest, scrollDist, cubes, dimensions;
     var map, availableColumns, instructions;
     var getTetrisDistance, tetrisAnimation;
+    var maxAnimationTime;
 
     init ();
 
@@ -56,6 +56,8 @@ function Tetris (scene, wall, transition, dropDistance) {
                 addBlock(startingPosition, 1, [], [startingPosition]);
             }
         }
+
+        maxAnimationTime = instructions[instructions.length-1].endTime;
     };
 
     function addBlock(blockPosition, blockCount, possibleMoves, completedMoves) {
@@ -157,8 +159,8 @@ function Tetris (scene, wall, transition, dropDistance) {
     };
 
     function animate () {
-        if (scrollDist != scene.getScrollDistance ()) {
-            scrollDist = scene.getScrollDistance ();
+        if (scrollDist != scrollManager.getRelativeScrollDistance(start, end, maxAnimationTime)) {
+            scrollDist = scrollManager.getRelativeScrollDistance (start, end, maxAnimationTime);
             tetrisAnimation();
         }
 
