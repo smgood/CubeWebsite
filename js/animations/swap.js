@@ -9,13 +9,7 @@ function Swap (scrollManager, wall, secondaryImage, aspectRatioDiff, start, end)
         cubes = wall.getCubes();
         cubeSize = wall.getCubeSize();
         dimensions = wall.getDimensions();
-
-        var getCropInfo;
-        if(aspectRatioDiff > 1) {
-            getCropInfo = wall.getCropInfoWide;
-        } else {
-            getCropInfo = wall.getCropInfoTall;
-        }
+        var getCropInfo = wall.getCropInfo(aspectRatioDiff);
 
         var availablePositions = [];
         for (var i = 0; i < dimensions.columns; i++) {

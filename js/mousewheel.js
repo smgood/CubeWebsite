@@ -1,5 +1,6 @@
-function Mousewheel () {
-    var touchSlideRequest
+function Mousewheel (start, end) {
+    var scene;
+    var touchSlideRequest;
     var scrollDist = 0;
 
     function onDocumentMouseWheel( event ) {
@@ -49,7 +50,24 @@ function Mousewheel () {
         if (scrollDist < 0) {
             scrollDist = 0;
         }
+        // add upper bound
+
+        checkSceneInBounds();
     };
+
+    function checkSceneInBounds() {
+        if (scrollDist < start || scrollDist > end) {
+            if (scene && scene.isPlaying()) {
+                scene.stop();
+                $(scene.getDomElement()).hide();
+            }
+        } else {
+            if (scene && !scene.isPlaying()) {
+                scene.play();
+                $(scene.getDomElement()).show();
+            }
+        }
+    }
 
     this.play = function() {
         window.addEventListener('mousewheel', onDocumentMouseWheel, false);
@@ -78,5 +96,10 @@ function Mousewheel () {
         } else {
             return relativeScrollDistance;
         }
+    };
+
+    this.setScene = function (Scene) {
+        scene = Scene;
+        checkSceneInBounds();
     };
 }

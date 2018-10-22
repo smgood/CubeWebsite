@@ -78,7 +78,15 @@ function Wall (image, wallSize, dimensions) {
     };
 
     // functions for secondary image
-    this.getCropInfoWide = function (secondImagePos, aspectRatioDiff) {
+    this.getCropInfo = function (aspectRatioDiff) {
+        if(aspectRatioDiff > 1) {
+            return getCropInfoWide;
+        } else {
+            return getCropInfoTall;
+        }
+    }
+
+    function getCropInfoWide (secondImagePos, aspectRatioDiff) {
         return new CropInfo (
             1/(columns * aspectRatioDiff),
             1/rows,
@@ -87,7 +95,7 @@ function Wall (image, wallSize, dimensions) {
         );
     };
 
-    this.getCropInfoTall = function (secondImagePos, aspectRatioDiff) {
+    function getCropInfoTall (secondImagePos, aspectRatioDiff) {
         return new CropInfo (
             1/columns,
             aspectRatioDiff/rows,

@@ -11,7 +11,9 @@ function Scene (dimensions, primaryImage, secondaryImage, animationType, depth, 
     var size = new THREE.Vector3(
         10*getAspectRatio(primaryImage),
         10,
-        depth/10,
+        isSideAnimation()
+            ? 10*getAspectRatio(primaryImage) / dimensions.columns
+            : depth/10,
     );
 
     init ();
@@ -66,10 +68,18 @@ function Scene (dimensions, primaryImage, secondaryImage, animationType, depth, 
                 var aspectRatioDiff  = getAspectRatio(secondaryImage) / getAspectRatio(primaryImage);
                 transition = new Swap(scrollManager, wall, secondaryImage, aspectRatioDiff, start, end);
                 break;
+            case "slideshow":
+                var aspectRatioDiff  = getAspectRatio(secondaryImage) / getAspectRatio(primaryImage);
+                transition = new Slideshow(scrollManager, wall, secondaryImage, aspectRatioDiff, start, end);
+                break;
             default:
-                transition = new Scroll(scrollManager, wall, transitionType, getDropDistance());
+                transition = new Scroll(scrollManager, wall, transitionType, getDropDistance(), start, end);
         };
     };
+
+    function isSideAnimation() {
+        return animationType == "slideshow";
+    }
 
     function setCameraPosition() {
         var fov = THREE.Math.degToRad( camera.fov );
@@ -158,10 +168,15 @@ function Scene (dimensions, primaryImage, secondaryImage, animationType, depth, 
     this.stop = function () {
         transition.stop();
         cancelAnimationFrame( animationRequest );
+        animationRequest = null;
 
         window.removeEventListener( 'resize', setSizeToWindow);
         window.removeEventListener( 'mousemove', onMouseMove, false );
     };
+
+    this.isPlaying = function () {
+        return animationRequest != null;
+    }
 
     this.dispose = function () {
         $this.stop();

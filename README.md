@@ -4,7 +4,7 @@
 
 # To Do
 ## Must have features:
-1. animations ideas: none, explode, pinpression (moves in z axis, rotates to mouse, mouse is repulsive magnet), slideshow, zipper
+1. animation ideas: none, explode, pinpression (moves in z axis, rotates to mouse, mouse is repulsive magnet), zipper, spiral!
 2. support multiple pages/animations
     - Set scroll distance offset for animation
     - Stop scene (or dispose) when scroll before or after

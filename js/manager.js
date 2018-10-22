@@ -21,10 +21,11 @@ function Manager (parameters = {}) {
     init ();
 
     function init () {
-        scrollManager = new Mousewheel();
+        readParameters();
+
+        scrollManager = new Mousewheel(start, end);
         scrollManager.play();
 
-        readParameters();
         createTexture(primaryImage);
         if (requiresSecondaryImage(animation)){
             total++;
@@ -62,7 +63,7 @@ function Manager (parameters = {}) {
     };
 
     function requiresSecondaryImage(animation) {
-        return animation == "swap";
+        return animation == "swap" || animation == "slideshow";
     }
 
     function loadImage (imageSrc) {
@@ -151,7 +152,7 @@ function Manager (parameters = {}) {
         }
 
         scene = new Scene(dimensions, primaryTexture, secondaryTexture, animation, depth, transition, scrollManager, start, end);
-        scene.play();
+        scrollManager.setScene(scene);
         parent.append( scene.getDomElement() );
     };
 
