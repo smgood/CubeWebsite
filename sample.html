@@ -35,9 +35,10 @@ Sean
     <script src="js/libraries/stats.min.js"></script>
 
     <!-- scene -->
-    <script src="js/manager.js"></script>
+    <script src="js/cubism.js"></script>
+    <script src="js/loader.js"></script>
     <script src="js/mousewheel.js"></script>
-    <script src="js/scene.js"></script>
+    <script src="js/animation.js"></script>
     <script src="js/wall.js"></script>
     <script src="js/cube.js"></script>
     <script src="js/face.js"></script>
@@ -53,44 +54,38 @@ Sean
     <script>
         $(document).ready(function() {
 
-            var parameters1  = {
-                rows: 10,
-                columns: 10,
-                depth: 10,
-                animation: 'gravity',
-                image: './images/stingray.mp4',
-                transition: 'enter',
-                start: 0,
-                end: 20
-            };
-
-            var manager1 = new Manager(parameters1);
-
-            var parameters2  = {
-                rows: 10,
-                columns: 10,
-                depth: 10,
-                animation: 'slideshow',
-                image: './images/stingray.mp4',
-                secondaryImage: './images/picasso.jpg',
-                start: 20,
-                end: 40
-            };
-
-            var manager2 = new Manager(parameters2);
-
-            var parameters3  = {
-                rows: 10,
-                columns: 10,
-                depth: 10,
-                animation: 'tetris',
-                image: './images/picasso.jpg',
-                transition: 'exit',
-                start: 40,
-                end: 100
-            };
-
-            var manager3 = new Manager(parameters3);
+            var parameters  = [
+                {
+                    rows: 10,
+                    columns: 10,
+                    depth: 10,
+                    animation: 'gravity',
+                    image: './images/stingray.mp4',
+                    transition: 'enter',
+                    start: 0,
+                    end: 20
+                },
+                {
+                    rows: 10,
+                    columns: 10,
+                    animation: 'slideshow',
+                    image: './images/stingray.mp4',
+                    secondaryImage: './images/picasso.jpg',
+                    start: 20,
+                    end: 40
+                },
+                {
+                    rows: 10,
+                    columns: 10,
+                    depth: 10,
+                    animation: 'tetris',
+                    image: './images/picasso.jpg',
+                    transition: 'exit',
+                    start: 40,
+                    end: 100
+                }
+            ];
+            var cubism = new Cubism(parameters);
 
             // fps ui
             var stats = new Stats();
@@ -105,15 +100,13 @@ Sean
             window.addEventListener('mousewheel', hideText, false);
             window.addEventListener('touchstart', hideText, false);
 
-            var text = $('#scroll_text');
             function hideText() {
-                if (text.is(":visible")) {
-                    text.fadeOut();
-                }
+                $('#scroll_text').fadeOut();
+                window.removeEventListener('mousewheel', hideText, false);
+                window.removeEventListener('touchstart', hideText, false);
             }
         });
     </script>
-
 </head>
 
 <body>

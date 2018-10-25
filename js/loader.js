@@ -1,5 +1,4 @@
 // input parameters
-// parent - object that webGL scene will be appended to
 // columns - number of cubes columns
 // rows - number of cube rows
 // animation - type of user scroll animation
@@ -9,10 +8,10 @@
 // transition - whether animation occurs on entrance or exit
 // start - when animation begins
 // end - when animation stops
-function Manager (parameters = {}) {
+function Loader (animationReady, scrollManager, camera, parameters = {}) {
 
-    var parent, columns, rows, animation, depth, primaryImage, secondaryImage, transition, start, end;
-    var scene, dimensions, scrollManager;
+    var columns, rows, animation, depth, primaryImage, secondaryImage, transition, start, end;
+    var animation, dimensions;
     var primaryTexture, secondaryTexture;
 
     var loaded = 0;
@@ -23,9 +22,6 @@ function Manager (parameters = {}) {
     function init () {
         readParameters();
 
-        scrollManager = new Mousewheel(start, end);
-        scrollManager.play();
-
         createTexture(primaryImage);
         if (requiresSecondaryImage(animation)){
             total++;
@@ -34,7 +30,6 @@ function Manager (parameters = {}) {
     };
 
     function readParameters (){
-            parent = parameters.parent || document.body;
             rows = parameters.rows || 10;
             columns = parameters.columns || 10;
             animation = parameters.animation || "scroll";
@@ -83,7 +78,7 @@ function Manager (parameters = {}) {
                 }
 
                 if (loaded == total) {
-                    createScene ();
+                    createWall ();
                 }
             },
 
@@ -134,7 +129,7 @@ function Manager (parameters = {}) {
             }
 
             if (loaded == total) {
-                createScene ();
+                createWall ();
             }
         };
 
@@ -143,17 +138,15 @@ function Manager (parameters = {}) {
         };
     };
 
-    function createScene () {
-        console.log( 'Loading complete!');
-
+    function createWall () {
         setTextureFormat(primaryTexture);
         if (secondaryTexture) {
             setTextureFormat(secondaryTexture);
         }
 
-        scene = new Scene(dimensions, primaryTexture, secondaryTexture, animation, depth, transition, scrollManager, start, end);
-        scrollManager.setScene(scene);
-        parent.append( scene.getDomElement() );
+        animationReady(
+            new Animation(dimensions, primaryTexture, secondaryTexture, animation, depth, transition, scrollManager, start, end, camera)
+        );
     };
 
     function setTextureFormat (texture) {
@@ -161,18 +154,4 @@ function Manager (parameters = {}) {
         texture.magFilter = THREE.LinearFilter;
         texture.format = THREE.RGBFormat;
     }
-
-    this.play = function () {
-        scrollManager.play();
-        scene.play();
-    };
-
-    this.stop = function () {
-        scrollManager.stop();
-        scene.stop();
-    };
-
-    this.dispose = function () {
-        scene.dispose();
-    };
 }

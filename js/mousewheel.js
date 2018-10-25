@@ -1,7 +1,16 @@
-function Mousewheel (start, end) {
-    var scene;
+function Mousewheel () {
+
+    var scrollDist, animations, end;
     var touchSlideRequest;
-    var scrollDist = 0;
+
+    init ();
+
+    function init () {
+        scrollDist = 0;
+        end = 0;
+
+        animations = [];
+    }
 
     function onDocumentMouseWheel( event ) {
         updateScrollDistance (event.wheelDeltaY * 0.001);
@@ -49,35 +58,50 @@ function Mousewheel (start, end) {
         scrollDist -= delta;
         if (scrollDist < 0) {
             scrollDist = 0;
+        } else if (scrollDist > end) {
+            scrollDist = end;
         }
-        // add upper bound
 
-        checkSceneInBounds();
+        checkAnimationsInBounds();
     };
 
-    function checkSceneInBounds() {
-        if (scrollDist < start || scrollDist > end) {
-            if (scene && scene.isPlaying()) {
-                scene.stop();
-                $(scene.getDomElement()).hide();
-            }
-        } else {
-            if (scene && !scene.isPlaying()) {
-                scene.play();
-                $(scene.getDomElement()).show();
+    function checkAnimationsInBounds() {
+        for (var i = 0; i < animations.length; i++) {
+            if (scrollDist < animations[i].getStart() || scrollDist > animations[i].getEnd()) {
+                if (animations[i].isVisible()) {
+                    animations[i].hideWall()
+                }
+            } else {
+                if (!animations[i].isVisible()) {
+                    animations[i].showWall()
+                }
             }
         }
     }
 
-    this.play = function() {
+    function play () {
+        checkAnimationsInBounds();
+
         window.addEventListener('mousewheel', onDocumentMouseWheel, false);
         window.addEventListener('touchstart', onDocumentTouchStart, false);
     };
 
-    this.stop = function() {
+    function stop () {
+        for (var i = 0; i < animations.length; i++) {
+            animations[i].stop();
+        }
+
         window.removeEventListener('mousewheel', onDocumentMouseWheel, false);
         window.removeEventListener('touchstart', onDocumentTouchStart, false);
     };
+
+    this.play = function () {
+        play();
+    }
+
+    this.stop = function () {
+        stop();
+    }
 
     this.reset = function() {
         scrollDist = 0;
@@ -98,8 +122,10 @@ function Mousewheel (start, end) {
         }
     };
 
-    this.setScene = function (Scene) {
-        scene = Scene;
-        checkSceneInBounds();
+    this.addAnimation = function (animation) {
+        animations.push(animation);
+        if (end < animation.getEnd()) {
+            end = animation.getEnd();
+        }
     };
 }

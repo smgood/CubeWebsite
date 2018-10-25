@@ -36,9 +36,10 @@ Sean
     <script src='js/libraries/dat.gui.min.js'></script>
 
     <!-- scene -->
-    <script src="js/manager.js"></script>
+    <script src="js/cubism.js"></script>
+    <script src="js/loader.js"></script>
     <script src="js/mousewheel.js"></script>
-    <script src="js/scene.js"></script>
+    <script src="js/animation.js"></script>
     <script src="js/wall.js"></script>
     <script src="js/cube.js"></script>
     <script src="js/face.js"></script>
@@ -65,8 +66,7 @@ Sean
                 start: 0,
                 end: 10
             };
-
-            var manager = new Manager(parameters);
+            var cubism = new Cubism([parameters]);
 
             // change parameters ui
             var checkboxes = {
@@ -83,8 +83,8 @@ Sean
                     './images/beach.jpg': false,
                 },
                 secondaryImage: {
-                    './images/stingray.mp4': true,
-                    './images/picasso.jpg': false,
+                    './images/stingray.mp4': false,
+                    './images/picasso.jpg': true,
                     './images/beach.jpg': false,
                 },
                 transition: {
@@ -94,9 +94,8 @@ Sean
             };
 
             var sceneChanger = function( ) {
-                manager.stop();
-                manager.dispose();
-                manager = new Manager(parameters);
+                cubism.dispose();
+                cubism = new Cubism([parameters]);
             };
             var gui = new dat.GUI();
             gui.add( parameters, "rows", 1, 20,  1 ).onChange( sceneChanger );
@@ -150,15 +149,13 @@ Sean
             window.addEventListener('mousewheel', hideText, false);
             window.addEventListener('touchstart', hideText, false);
 
-            var text = $('#scroll_text');
             function hideText() {
-                if (text.is(":visible")) {
-                    text.fadeOut();
-                }
+                $('#scroll_text').fadeOut();
+                window.removeEventListener('mousewheel', hideText, false);
+                window.removeEventListener('touchstart', hideText, false);
             }
         });
     </script>
-
 </head>
 
 <body>

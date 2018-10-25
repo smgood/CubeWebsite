@@ -11,6 +11,7 @@ function Wall (image, wallSize, dimensions) {
         columns = dimensions.columns;
 
         group = new THREE.Group();
+        group.position.z = -wallSize.z/2;
 
         cubeSize = new THREE.Vector3(
             wallSize.x/columns,

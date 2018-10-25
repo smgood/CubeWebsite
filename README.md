@@ -3,23 +3,24 @@
 - Demo: http://smgoodrich.com/cubes
 
 # To Do
-## Must have features:
+## Features:
 1. animation ideas: none, explode, pinpression (moves in z axis, rotates to mouse, mouse is repulsive magnet), zipper, spiral!
-2. support multiple pages/animations
-    - Set scroll distance offset for animation
-    - Stop scene (or dispose) when scroll before or after
-3. option to set cube opacity, texture (shininess, metallic), and color (hex, random, or match image)
-4. Support full screen
+2. option to set cube opacity, texture (shininess, metallic), and color (hex, random, or match image)
+3. Support full screen
     - Figure out optimal amount of rows and columns based on window size, dimensions parameters, & image aspect ratio
     - dispose and recreate scene on resize (in manager)
-5. support all browsers and mobile (make play button for videos)
-6. improve dispose functionality to remove all memory leaks
-7. Keep code clean & readable
-8. make depth relative to cube size instead of wall
-9. Make all scenes into 1 scene and use layers
+4. support all browsers and mobile (make play button for videos)
+5. improve dispose functionality to remove all memory leaks
+6. Keep code clean & readable
+7. make depth relative to cube size instead of wall
+8. Add layers to support multiple animations at once
 
-## Would like features:
+## Would like:
 1. scroll bar and navigation dots
 2. support having cubes of different sizes in wall
 3. Allow one big image or each cube a separate image/video
 4. raycasting cube plays video / supports link
+
+## Bugs
+1. Video doesn't load sometimes
+2. Buffer when animation first displayed
