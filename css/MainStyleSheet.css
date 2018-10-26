@@ -1,4 +1,5 @@
 body {
+    position: fixed;
     overflow: hidden;
     margin:0px;
 }

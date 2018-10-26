@@ -35,12 +35,10 @@ function Animation (dimensions, primaryImage, secondaryImage, animationType, dep
                 transition = new Tetris(scrollManager, wall, transitionType, getDropDistance(), start, end);
                 break;
             case "swap":
-                var aspectRatioDiff  = getAspectRatio(secondaryImage) / getAspectRatio(primaryImage);
-                transition = new Swap(scrollManager, wall, secondaryImage, aspectRatioDiff, start, end);
+                transition = new Swap(scrollManager, wall, secondaryImage, getAspectRatioDiff(), start, end);
                 break;
             case "slideshow":
-                var aspectRatioDiff  = getAspectRatio(secondaryImage) / getAspectRatio(primaryImage);
-                transition = new Slideshow(scrollManager, wall, secondaryImage, aspectRatioDiff, start, end);
+                transition = new Slideshow(scrollManager, wall, secondaryImage, getAspectRatioDiff(), start, end);
                 break;
             default:
                 transition = new Scroll(scrollManager, wall, transitionType, getDropDistance(), start, end);
@@ -86,6 +84,10 @@ function Animation (dimensions, primaryImage, secondaryImage, animationType, dep
 
     function getImageAspectRatio (imageTexture) {
         return imageTexture.image.width / imageTexture.image.height;
+    }
+
+    function getAspectRatioDiff () {
+        return getAspectRatio(secondaryImage) / getAspectRatio(primaryImage);
     }
 
     function play () {

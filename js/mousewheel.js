@@ -27,7 +27,7 @@ function Mousewheel () {
             event.preventDefault();
 
             touchDistance = event.touches[0].clientY - touchStart;
-            updateScrollDistance (touchDistance);
+            updateScrollDistance (touchDistance * 0.02);
             touchStart = event.touches[0].clientY;
         };
 
@@ -41,7 +41,7 @@ function Mousewheel () {
 
         function slide () {
             touchDistance *= 0.92;
-            updateScrollDistance (touchDistance);
+            updateScrollDistance (touchDistance * 0.02);
 
             if (Math.abs(touchDistance) > .1) {
                 touchSlideRequest = requestAnimationFrame( slide );
