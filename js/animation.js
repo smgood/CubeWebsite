@@ -6,9 +6,7 @@ function Animation (dimensions, primaryImage, secondaryImage, animationType, dep
     var size = new THREE.Vector3(
         10*getAspectRatio(primaryImage),
         10,
-        isSideAnimation()
-            ? 10*getAspectRatio(primaryImage) / dimensions.columns
-            : depth/10,
+        10*getAspectRatio(primaryImage)*depth / dimensions.columns
     );
 
     init ();
@@ -44,10 +42,6 @@ function Animation (dimensions, primaryImage, secondaryImage, animationType, dep
                 transition = new Scroll(scrollManager, wall, transitionType, getDropDistance(), start, end);
         };
     };
-
-    function isSideAnimation() {
-        return animationType == "slideshow";
-    }
 
     function getVerticalFovFront() {
         return size.y;

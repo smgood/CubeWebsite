@@ -58,7 +58,7 @@ Sean
             var parameters  = {
                 rows: 10,
                 columns: 10,
-                depth: 10,
+                depth: 1,
                 animation: 'gravity',
                 image: './images/stingray.mp4',
                 secondaryImage: './images/picasso.jpg',
@@ -100,7 +100,7 @@ Sean
             var gui = new dat.GUI();
             gui.add( parameters, "rows", 1, 20,  1 ).onChange( sceneChanger );
             gui.add( parameters, "columns", 1, 20, 1 ).onChange( sceneChanger );
-            gui.add( parameters, "depth", 1, 20, 1 ).name('depth (%)').onChange( sceneChanger );
+            gui.add( parameters, "depth", .1, 2, .1 ).name('depth').onChange( sceneChanger );
             gui.add( parameters, "end", 1, 20, 1 ).name('speed').onChange( sceneChanger );
 
             var selectedPrimaryImage = gui.addFolder("Primary Image");

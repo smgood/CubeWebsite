@@ -22,6 +22,10 @@ function Loader (animationReady, scrollManager, camera, parameters = {}) {
     function init () {
         readParameters();
 
+        if (isSideAnimation()) {
+            depth = 1;
+        }
+
         createTexture(primaryImage);
         if (requiresSecondaryImage(animation)){
             total++;
@@ -33,7 +37,7 @@ function Loader (animationReady, scrollManager, camera, parameters = {}) {
             rows = parameters.rows || 10;
             columns = parameters.columns || 10;
             animation = parameters.animation || "scroll";
-            depth = parameters.depth || 10;
+            depth = parameters.depth || 1;
             primaryImage = parameters.image || parameters.primaryImage || './images/picasso.jpg';
             secondaryImage = parameters.secondaryImage || './images/picasso.jpg';
             transition = parameters.transition || 'exit';
@@ -59,6 +63,10 @@ function Loader (animationReady, scrollManager, camera, parameters = {}) {
 
     function requiresSecondaryImage(animation) {
         return animation == "swap" || animation == "slideshow";
+    }
+
+    function isSideAnimation() {
+        return animation == "slideshow";
     }
 
     function loadImage (imageSrc) {
