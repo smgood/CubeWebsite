@@ -42,6 +42,7 @@ Sean
     <script src="js/animation.js"></script>
     <script src="js/wall.js"></script>
     <script src="js/cube.js"></script>
+    <script src="js/secondaryImageInfo.js"></script>
     <script src="js/face.js"></script>
     <script src="js/constants.js"></script>
 
@@ -49,6 +50,7 @@ Sean
     <script src="js/animations/gravity.js"></script>
     <script src="js/animations/scroll.js"></script>
     <script src="js/animations/slideshow.js"></script>
+    <script src="js/animations/spiral.js"></script>
     <script src="js/animations/swap.js"></script>
     <script src="js/animations/tetris.js"></script>
 
@@ -74,6 +76,7 @@ Sean
                     gravity: true,
                     scroll: false,
                     slideshow: false,
+                    spiral: false,
                     swap: false,
                     tetris: false,
                 },
@@ -117,6 +120,7 @@ Sean
             selectedAnimation.add(checkboxes.animation, 'gravity').name('gravity').listen().onChange(function(){setChecked("animation", "gravity")});
             selectedAnimation.add(checkboxes.animation, 'scroll').name('scroll').listen().onChange(function(){setChecked("animation", "scroll")});
             selectedAnimation.add(checkboxes.animation, 'slideshow').name('slideshow').listen().onChange(function(){setChecked("animation", "slideshow")});
+            selectedAnimation.add(checkboxes.animation, 'spiral').name('spiral').listen().onChange(function(){setChecked("animation", "spiral")});
             selectedAnimation.add(checkboxes.animation, 'swap').name('swap').listen().onChange(function(){setChecked("animation", "swap")});
             selectedAnimation.add(checkboxes.animation, 'tetris').name('tetris').listen().onChange(function(){setChecked("animation", "tetris")});
 

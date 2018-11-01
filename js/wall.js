@@ -77,31 +77,4 @@ function Wall (image, wallSize, dimensions) {
     this.getObject = function () {
         return group;
     };
-
-    // functions for secondary image
-    this.getCropInfo = function (aspectRatioDiff) {
-        if(aspectRatioDiff > 1) {
-            return getCropInfoWide;
-        } else {
-            return getCropInfoTall;
-        }
-    }
-
-    function getCropInfoWide (secondImagePos, aspectRatioDiff) {
-        return new CropInfo (
-            1/(columns * aspectRatioDiff),
-            1/rows,
-            (aspectRatioDiff - 1) / 2 + secondImagePos.x/(columns * aspectRatioDiff),
-            secondImagePos.y/rows
-        );
-    };
-
-    function getCropInfoTall (secondImagePos, aspectRatioDiff) {
-        return new CropInfo (
-            1/columns,
-            aspectRatioDiff/rows,
-            secondImagePos.x/columns,
-            (1/aspectRatioDiff - 1) / 2 + (aspectRatioDiff*secondImagePos.y)/rows
-        );
-    };
 };

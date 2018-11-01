@@ -46,6 +46,11 @@ function Cube (size, position, image, cropInfo) {
         }
     };
 
+    this.setDepthToHeight = function (Depth) {
+        object.scale.z = size.y / size.z;
+        object.position.z = - (size.y - size.z)/2;
+    };
+
     this.addSecondaryImage = function (secondaryImage, secondaryCropInfo, secondarySide) {
         cropTexture(geometry, secondarySide.face, secondaryCropInfo);
 
@@ -54,14 +59,14 @@ function Cube (size, position, image, cropInfo) {
         });
 
         materials[secondarySide.index] = imageMaterial;
-    }
+    };
 
     this.dispose = function () {
         object.geometry.dispose();
         for (var i = 0; i < object.material.length; i++) {
             object.material[i].dispose();
         }
-    }
+    };
 
     this.setOriginalPosition = function () {
         object.position.set(position.x, position.y, position.z);

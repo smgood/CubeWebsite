@@ -11,13 +11,13 @@ function Slideshow (scrollManager, wall, secondaryImage, aspectRatioDiff, start,
         maxAnimationTime = dimensions.rows > dimensions.columns
             ? dimensions.rows + 1
             : dimensions.columns + 1;
-        var getCropInfo = wall.getCropInfo(aspectRatioDiff);
+        var secondaryImageInfo = new SecondaryImageInfo (aspectRatioDiff, dimensions);
 
         slideshowMap = [];
         for (var i = 0; i < dimensions.columns; i++) {
             var column = []
             for (var j = 0; j < dimensions.rows; j++) {
-                cubes[i][j].addSecondaryImage(secondaryImage, getCropInfo(new THREE.Vector2(i,j), aspectRatioDiff), side.left);
+                cubes[i][j].addSecondaryImage(secondaryImage, secondaryImageInfo.getCropInfo(new THREE.Vector2(i,j)), side.left);
                 column.push(Math.abs(i-(dimensions.rows-j-1)));
                 // other direction
                 // column.push(Math.abs(i-j));

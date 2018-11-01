@@ -4,7 +4,7 @@
 
 # To Do
 ## Features:
-1. animation ideas: none, explode, pinpression (moves in z axis, rotates to mouse, mouse is repulsive magnet), zipper, spiral!
+1. animation ideas: none, explode, pinpression (moves in z axis, rotates to mouse, mouse is repulsive magnet), zipper
 2. option to set cube opacity, texture (shininess, metallic), and color (hex, random, or match image)
 3. Support full screen
     - Figure out optimal amount of rows and columns based on window size, dimensions parameters, & image aspect ratio

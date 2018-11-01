@@ -38,6 +38,9 @@ function Animation (dimensions, primaryImage, secondaryImage, animationType, dep
             case "slideshow":
                 transition = new Slideshow(scrollManager, wall, secondaryImage, getAspectRatioDiff(), start, end);
                 break;
+            case "spiral":
+                transition = new Spiral(scrollManager, wall, secondaryImage, getAspectRatioDiff(), start, end);
+                break;
             default:
                 transition = new Scroll(scrollManager, wall, transitionType, getDropDistance(), start, end);
         };

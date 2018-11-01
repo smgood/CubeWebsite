@@ -9,7 +9,7 @@ function Swap (scrollManager, wall, secondaryImage, aspectRatioDiff, start, end)
         cubes = wall.getCubes();
         cubeSize = wall.getCubeSize();
         dimensions = wall.getDimensions();
-        var getCropInfo = wall.getCropInfo(aspectRatioDiff);
+        var secondaryImageInfo = new SecondaryImageInfo (aspectRatioDiff, dimensions);
 
         var availablePositions = [];
         for (var i = 0; i < dimensions.columns; i++) {
@@ -25,7 +25,7 @@ function Swap (scrollManager, wall, secondaryImage, aspectRatioDiff, start, end)
                 var randomCoord = Math.floor(Math.random() * availablePositions.length);
                 var secondImagePos = availablePositions[randomCoord];
                 availablePositions.splice(randomCoord, 1);
-                cubes[i][j].addSecondaryImage(secondaryImage, getCropInfo(secondImagePos, aspectRatioDiff), side.back);
+                cubes[i][j].addSecondaryImage(secondaryImage, secondaryImageInfo.getCropInfo(secondImagePos), side.back);
 
                 var yRotation = Math.floor((Math.random() - 0.5) * 4) / 2;
                 var xRotation = Math.floor((Math.random() - 0.5) * 2);

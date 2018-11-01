@@ -62,11 +62,14 @@ function Loader (animationReady, scrollManager, camera, parameters = {}) {
     };
 
     function requiresSecondaryImage(animation) {
-        return animation == "swap" || animation == "slideshow";
+        return animation == "swap" ||
+            animation == "slideshow" ||
+            animation == "spiral";
     }
 
     function isSideAnimation() {
-        return animation == "slideshow";
+        return animation == "slideshow" ||
+            animation == "spiral";
     }
 
     function loadImage (imageSrc) {
