@@ -13,7 +13,7 @@
 5. improve dispose functionality to remove all memory leaks
 6. Keep code clean & readable
 7. Add layers to support multiple animations at once
-8. store + reuse same video/image if already loaded (to sync videos & improve speed)
+8. Use parameterReader before textureLoader
 
 ## Would like:
 1. scroll bar and navigation dots

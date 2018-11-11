@@ -1,74 +1,56 @@
-// input parameters
-// columns - number of cubes columns
-// rows - number of cube rows
+// parameters
 // animation - type of user scroll animation
-// depth - depth size of each cube
 // primaryImage - file path of image to be used as texture for cubes
 // secondaryImage - file path of image that may be used for some animations
-// transition - whether animation occurs on entrance or exit
-// start - when animation begins
-// end - when animation stops
-function Loader (animationReady, scrollManager, camera, parameters = {}) {
+function Loader (animationReady, parameters = []) {
 
-    var columns, rows, animation, depth, primaryImage, secondaryImage, transition, start, end;
-    var animation, dimensions;
-    var primaryTexture, secondaryTexture;
-
-    var loaded = 0;
-    var total = 1;
+    var textures, loaded, total;
 
     init ();
 
     function init () {
-        readParameters();
+        textures = {};
+        loaded = 0;
+        total = parameters.length * 2;
 
-        if (isSideAnimation()) {
-            depth = 1;
+        for (var i = 0; i < parameters.length; i++) {
+            loadAnimationTexture (parameters[i] || {});
         }
+    }
+
+    function loadAnimationTexture (parameters) {
+        var animation = parameters.animation || "scroll";
+        var primaryImage = parameters.image || parameters.primaryImage || './images/picasso.jpg';
+        var secondaryImage = parameters.secondaryImage || './images/picasso.jpg';
 
         createTexture(primaryImage);
-        if (requiresSecondaryImage(animation)){
-            total++;
+
+        if (hasSecondaryImage(animation)){
             createTexture(secondaryImage);
+        } else {
+            textureLoaded ();
         }
-    };
-
-    function readParameters (){
-            rows = parameters.rows || 10;
-            columns = parameters.columns || 10;
-            animation = parameters.animation || "scroll";
-            depth = parameters.depth || 1;
-            primaryImage = parameters.image || parameters.primaryImage || './images/picasso.jpg';
-            secondaryImage = parameters.secondaryImage || './images/picasso.jpg';
-            transition = parameters.transition || 'exit';
-            start = parameters.start || 0;
-            end = parameters.end || 10;
-
-            dimensions = {
-                rows: rows,
-                columns: columns
-            };
     };
 
     function createTexture(imageSrc) {
-        var extension = imageSrc.split('.').pop();
-        if (extensions.image.includes(extension)){
-            loadImage(imageSrc);
-        } else if (extensions.video.includes(extension)) {
-            loadVideo(imageSrc);
+        if (textures[imageSrc]) {
+            textureLoaded ();
         } else {
-            console.log ('file extension not supported');
+            textures[imageSrc] = "loading";
+            var extension = imageSrc.split('.').pop();
+            if (extensions.image.includes(extension)){
+                loadImage(imageSrc);
+            } else if (extensions.video.includes(extension)) {
+                loadVideo(imageSrc);
+            } else {
+                console.log ('file extension not supported');
+            }
         }
     };
 
-    function requiresSecondaryImage(animation) {
+    function hasSecondaryImage(animation) {
         return animation == "swap" ||
             animation == "slideshow" ||
-            animation == "spiral";
-    }
-
-    function isSideAnimation() {
-        return animation == "slideshow" ||
             animation == "spiral";
     }
 
@@ -78,19 +60,7 @@ function Loader (animationReady, scrollManager, camera, parameters = {}) {
 
             // onLoad callback
             function ( imageTexture ) {
-                loaded ++;
-                console.log(loaded + "\/" + total + " files loaded \(" + imageTexture.image.src + "\)");
-
-                if (primaryImage == imageSrc) {
-                    primaryTexture = imageTexture;
-                }
-                if (secondaryImage == imageSrc) {
-                    secondaryTexture = imageTexture;
-                }
-
-                if (loaded == total) {
-                    createWall ();
-                }
+                setTexture (imageSrc, imageTexture);
             },
 
             // onProgress callback currently not supported
@@ -128,20 +98,8 @@ function Loader (animationReady, scrollManager, camera, parameters = {}) {
         };
 
         function loadingManager () {
-            loaded ++;
-            console.log(loaded + "\/" + total + " files loaded \(" + source.src + "\)");
             var videoTexture = new THREE.VideoTexture( video );
-
-            if (primaryImage == videoSrc){
-                primaryTexture = videoTexture;
-            }
-            if (secondaryImage == videoSrc){
-                secondaryTexture = videoTexture;
-            }
-
-            if (loaded == total) {
-                createWall ();
-            }
+            setTexture (videoSrc, videoTexture);
         };
 
         function errorManager () {
@@ -149,20 +107,24 @@ function Loader (animationReady, scrollManager, camera, parameters = {}) {
         };
     };
 
-    function createWall () {
-        setTextureFormat(primaryTexture);
-        if (secondaryTexture) {
-            setTextureFormat(secondaryTexture);
-        }
+    function setTexture (source, texture) {
+        console.log("loaded " + source);
 
-        animationReady(
-            new Animation(dimensions, primaryTexture, secondaryTexture, animation, depth, transition, scrollManager, start, end, camera)
-        );
-    };
+        setTextureFormat(texture);
+        textures[source] = texture;
+        textureLoaded ();
+    }
 
     function setTextureFormat (texture) {
         texture.minFilter = THREE.LinearFilter;
         texture.magFilter = THREE.LinearFilter;
         texture.format = THREE.RGBFormat;
+    }
+
+    function textureLoaded () {
+        loaded ++;
+        if (loaded == total) {
+            animationReady(textures);
+        }
     }
 }
