@@ -1,4 +1,4 @@
-function Animation (dimensions, primaryImage, secondaryImage, animationType, depth, transitionType, scrollManager, start, end, camera) {
+function Animation (dimensions, primaryImage, secondaryImage, animationType, depth, transitionType, start, end, scrollManager, camera) {
 
     var wall;
     var transition;

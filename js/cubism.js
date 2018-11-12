@@ -1,6 +1,6 @@
 function Cubism (parameters = []) {
 
-    var scene, camera, light, textures, animations, renderer, dom;
+    var scene, camera, light, textures, animations, animationInfo, renderer, dom;
     var windowWidth, windowHeight;
     var animationRequest, scrollManager;
 
@@ -49,15 +49,29 @@ function Cubism (parameters = []) {
 
     function setAnimations () {
         animations = [];
-        TextureLoader(animationReady, parameters);
+        animationInfo = ParameterReader(parameters);
+        TextureLoader(animationReady, animationInfo);
     }
 
     function animationReady (Textures) {
-        console.log ("Loading complete!");
         textures = Textures;
+        console.log ("Loading complete!");
 
         for (var i = 0; i < parameters.length; i++) {
-            var animation = ParameterReader(scrollManager, camera, parameters[i], textures);
+            var a = animationInfo[i];
+            var animation = new Animation(
+                a.dimensions,
+                textures[a.primaryImage],
+                textures[a.secondaryImage],
+                a.animation,
+                a.depth,
+                a.transition,
+                a.start,
+                a.end,
+                scrollManager,
+                camera
+            );
+
             animations.push(animation);
             scrollManager.addAnimation(animation);
             scene.add(animation.getWall());

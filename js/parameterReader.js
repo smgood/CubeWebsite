@@ -8,35 +8,22 @@
 // transition - whether animation occurs on entrance or exit
 // start - when animation begins
 // end - when animation stops
-function ParameterReader (scrollManager, camera, parameters = {}, textures) {
+function ParameterReader (parametersList) {
 
-    var columns, rows, animation, depth, primaryImage, secondaryImage, transition, start, end;
-    var dimensions;
+    return getAnimationInfo ();
 
-    return createAnimation ();
-
-    function createAnimation () {
-        readParameters();
-
-        if (isSideAnimation()) {
-            depth = 1;
+    function getAnimationInfo () {
+        var animationsInfo = [];
+        for (var i = 0; i < parametersList.length; i++) {
+            animationsInfo.push (readParameters(parametersList[i]));
         }
-
-        return new Animation(
-            dimensions,
-            textures[primaryImage],
-            textures[secondaryImage],
-            animation,
-            depth,
-            transition,
-            scrollManager,
-            start,
-            end,
-            camera
-        );
+        return animationsInfo;
     };
 
-    function readParameters (){
+    function readParameters (parameters = {}){
+            var columns, rows, animation, depth, primaryImage, secondaryImage, transition, start, end;
+            var dimensions;
+
             rows = parameters.rows || 10;
             columns = parameters.columns || 10;
             animation = parameters.animation || "scroll";
@@ -51,9 +38,24 @@ function ParameterReader (scrollManager, camera, parameters = {}, textures) {
                 rows: rows,
                 columns: columns
             };
+
+            if (isSideAnimation(animation)) {
+                depth = 1;
+            }
+
+            return {
+                dimensions,
+                primaryImage,
+                secondaryImage,
+                animation,
+                depth,
+                transition,
+                start,
+                end
+            };
     };
 
-    function isSideAnimation() {
+    function isSideAnimation(animation) {
         return animation == "slideshow" ||
             animation == "spiral";
     };
