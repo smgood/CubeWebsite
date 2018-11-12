@@ -49,7 +49,7 @@ function Cubism (parameters = []) {
 
     function setAnimations () {
         animations = [];
-        Loader(animationReady, parameters);
+        TextureLoader(animationReady, parameters);
     }
 
     function animationReady (Textures) {

@@ -2,7 +2,7 @@
 // animation - type of user scroll animation
 // primaryImage - file path of image to be used as texture for cubes
 // secondaryImage - file path of image that may be used for some animations
-function Loader (animationReady, parameters = []) {
+function TextureLoader (animationReady, parameters = []) {
 
     var textures, loaded, total;
 
