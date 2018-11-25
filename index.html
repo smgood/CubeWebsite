@@ -67,7 +67,10 @@ Sean
                 secondaryImage: './images/picasso.jpg',
                 transition: 'exit',
                 start: 0,
-                end: 10
+                end: 10,
+                colorType: 'rainbow',
+                colorValue: 'red',
+                opacity: 0.5,
             };
             var cubism = new Cubism([parameters]);
 
@@ -95,6 +98,12 @@ Sean
                     enter: false,
                     exit: true,
                 },
+                colorType: {
+                    solid: false,
+                    rainbow: true,
+                    sample: false,
+                    extrude: false,
+                },
             };
 
             var sceneChanger = function( ) {
@@ -104,8 +113,9 @@ Sean
             var gui = new dat.GUI();
             gui.add( parameters, "rows", 1, 20,  1 ).onChange( sceneChanger );
             gui.add( parameters, "columns", 1, 20, 1 ).onChange( sceneChanger );
-            gui.add( parameters, "depth", .1, 2, .1 ).name('depth').onChange( sceneChanger );
+            gui.add( parameters, "depth", .1, 2, .1 ).onChange( sceneChanger );
             gui.add( parameters, "end", 1, 20, 1 ).name('speed').onChange( sceneChanger );
+            gui.add( parameters, "opacity", .1, 1, .1 ).onChange( sceneChanger );
 
             var selectedPrimaryImage = gui.addFolder("Primary Image");
             selectedPrimaryImage.add(checkboxes.image, './images/stingray.mp4').name('stingray').listen().onChange(function(){setChecked("image", "./images/stingray.mp4")});
@@ -116,6 +126,13 @@ Sean
             selectedSecondaryImage.add(checkboxes.secondaryImage, './images/stingray.mp4').name('stingray').listen().onChange(function(){setChecked("secondaryImage", "./images/stingray.mp4")});
             selectedSecondaryImage.add(checkboxes.secondaryImage, './images/picasso.jpg').name('picasso').listen().onChange(function(){setChecked("secondaryImage", "./images/picasso.jpg")});
             selectedSecondaryImage.add(checkboxes.secondaryImage, './images/beach.jpg').name('beach').listen().onChange(function(){setChecked("secondaryImage", "./images/beach.jpg")});
+
+            var selectedColor = gui.addFolder("Color");
+            selectedColor.add(checkboxes.colorType, 'solid').name('red').listen().onChange(function(){setChecked("colorType", "solid")});
+            selectedColor.add(checkboxes.colorType, 'rainbow').name('rainbow').listen().onChange(function(){setChecked("colorType", "rainbow")});
+            selectedColor.add(checkboxes.colorType, 'sample').name('sample').listen().onChange(function(){setChecked("colorType", "sample")});
+            selectedColor.add(checkboxes.colorType, 'extrude').name('extrude').listen().onChange(function(){setChecked("colorType", "extrude")});
+
 
             var selectedAnimation = gui.addFolder("Animation");
             selectedAnimation.add(checkboxes.animation, 'gravity').name('gravity').listen().onChange(function(){setChecked("animation", "gravity")});

@@ -68,6 +68,7 @@ function Cubism (parameters = []) {
                 a.transition,
                 a.start,
                 a.end,
+                a.color,
                 scrollManager,
                 camera
             );

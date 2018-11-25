@@ -6,14 +6,15 @@ body {
 
 .container {
     overflow: hidden;
-    position: absolute;
+    position: fixed;
     display: block;
     height: 100vh;
     width: 100vw;
+    pointer-events: none;
 }
 
 canvas {
     overflow: hidden;
-    position: absolute;
+    position: fixed;
     display: block;
 }

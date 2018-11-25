@@ -1,4 +1,4 @@
-function Animation (dimensions, primaryImage, secondaryImage, animationType, depth, transitionType, start, end, scrollManager, camera) {
+function Animation (dimensions, primaryImage, secondaryImage, animationType, depth, transitionType, start, end, color, scrollManager, camera) {
 
     var wall;
     var transition;
@@ -17,7 +17,7 @@ function Animation (dimensions, primaryImage, secondaryImage, animationType, dep
     };
 
     function setWall () {
-        wall = new Wall(primaryImage, size, dimensions);
+        wall = new Wall(primaryImage, size, dimensions, color);
         wall.getObject().visible = false;
     };
 

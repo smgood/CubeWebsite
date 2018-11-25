@@ -8,6 +8,9 @@
 // transition - whether animation occurs on entrance or exit
 // start - when animation begins
 // end - when animation stops
+// colorType - type of mat color
+// colorValue - value if solid color (string, rgb, hex, etc)
+// opacity - opacity between 0 and 1
 function ParameterReader (parametersList) {
 
     return getAnimationInfo ();
@@ -21,8 +24,8 @@ function ParameterReader (parametersList) {
     };
 
     function readParameters (parameters = {}){
-            var columns, rows, animation, depth, primaryImage, secondaryImage, transition, start, end;
-            var dimensions;
+            var columns, rows, animation, depth, primaryImage, secondaryImage, transition, start, end, colorType, colorValue, opacity;
+            var dimensions, color;
 
             rows = parameters.rows || 10;
             columns = parameters.columns || 10;
@@ -33,10 +36,19 @@ function ParameterReader (parametersList) {
             transition = parameters.transition || 'exit';
             start = parameters.start || 0;
             end = parameters.end || 10;
+            colorType = parameters.colorType || "rainbow";
+            colorValue = parameters.colorValue || "blue";
+            opacity = parameters.opacity || 1;
 
             dimensions = {
                 rows: rows,
                 columns: columns
+            };
+
+            color = {
+                type: colorType,
+                value: colorValue,
+                opacity: opacity
             };
 
             if (isSideAnimation(animation)) {
@@ -51,7 +63,8 @@ function ParameterReader (parametersList) {
                 depth,
                 transition,
                 start,
-                end
+                end,
+                color,
             };
     };
 

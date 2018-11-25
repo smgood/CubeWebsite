@@ -74,7 +74,7 @@ function TextureLoader (animationReady, animationInfoList) {
     function loadVideo (videoSrc) {
         var video = document.createElement('video');
 
-        video.onloadedmetadata = loadingManager;
+        video.onloadeddata = loadingManager;
         video.onerror = errorManager;
         video.oncanplay = playVideo;
 

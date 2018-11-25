@@ -54,19 +54,59 @@ Sean
     <script src="js/animations/swap.js"></script>
     <script src="js/animations/tetris.js"></script>
 
+    <style>
+        body {
+            background-color:PaleTurquoise;
+            color: #404040;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+        h1 {
+            font-size: 3vh;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.6vh;
+        }
+
+        li {
+            font-size: 1.3vh;
+            margin-left:3vh;
+        }
+
+        p, a {
+            font-size: 1.3vh;
+            color: #404040;
+        }
+    </style>
+
     <script>
         $(document).ready(function() {
 
             var parameters  = [
                 {
+                    rows: 12,
+                    columns: 11,
+                    depth: 0.25,
+                    animation: 'gravity',
+                    image: './images/glassBlocks.jpg',
+                    transition: 'exit',
+                    start: 0,
+                    end: 20,
+                    colorType: 'extrude',
+                    opacity: 0.75
+                },
+                {
                     rows: 10,
                     columns: 10,
                     depth: 1,
-                    animation: 'gravity',
+                    animation: 'tetris',
                     image: './images/stingray.mp4',
                     transition: 'enter',
-                    start: 0,
-                    end: 20
+                    start: 20,
+                    end: 80,
+                    colorType: 'rainbow',
+                    opacity: 0.2
                 },
                 {
                     rows: 10,
@@ -74,18 +114,9 @@ Sean
                     animation: 'slideshow',
                     image: './images/stingray.mp4',
                     secondaryImage: './images/picasso.jpg',
-                    start: 20,
-                    end: 40
-                },
-                {
-                    rows: 10,
-                    columns: 10,
-                    depth: 1,
-                    animation: 'tetris',
-                    image: './images/picasso.jpg',
-                    transition: 'exit',
-                    start: 40,
-                    end: 100
+                    start: 80,
+                    end: 100,
+                    colorType: 'sample'
                 }
             ];
             var cubism = new Cubism(parameters);
@@ -98,22 +129,73 @@ Sean
                 stats.update();
                 requestAnimationFrame( updateStats );
             }
-
-            // hide scroll texture
-            window.addEventListener('mousewheel', hideText, false);
-            window.addEventListener('touchstart', hideText, false);
-
-            function hideText() {
-                $('#scroll_text').fadeOut();
-                window.removeEventListener('mousewheel', hideText, false);
-                window.removeEventListener('touchstart', hideText, false);
-            }
         });
     </script>
 </head>
 
 <body>
-    <div id="scroll_text" style="position: fixed; z-index: 1; width: 100%; top:50%; text-align: center; color:black;">
-        SCROLL UP AND DOWN
-    </div>
+    <div style="height: 100vh; width: 100vw; position: fixed;">
+        <div style="position: relative; height: 100vh; width: 91vh; max-width: 100vw; margin: auto;">
+
+            <div style="height: 100%; width: 50%; float:left;">
+                <div style="margin: 3vh;">
+                    <h1>Documentation</h1>
+
+                    <h2>Animation: (default scroll)</h2>
+                    <li><b>String</b>: gravity, scroll, slideshow, spiral, swap, tetris</li>
+
+                    <h2>Transition*: (default exit)</h2>
+                    <li><b>String</b>: enter, exit</li>
+
+                    <h2>Columns: (default 10)</h2>
+                    <li><b>Int</b></li>
+
+                    <h2>Rows: (default 10)</h2>
+                    <li><b>Int</b></li>
+
+                    <h2>Depth: (default 1)</h2>
+                    <li><b>Float</b></li>
+
+                    <h2>Image: (default ./images/picasso.jpg)</h2>
+                    <li><b>String</b>: (img or video file path)</li>
+
+                    <h2>Secondary Image: (default ./images/picasso.jpg)</h2>
+                    <li><b>String</b>: (img or video file path)</li>
+
+                    <h2>Start: (default 0)</h2>
+                    <li><b>Float</b></li>
+
+                    <h2>End: (default 10)</h2>
+                    <li><b>Float</b></li>
+
+                    <h2>Color Type: (default rainbow)</h2>
+                    <li><b>String</b>: extrude, rainbow, sample, solid</li>
+
+                    <h2>Color Value**: (default blue)</h2>
+                    <li><b>String</b>: (RGB, HSL, X11 name)</li>
+                    <li><b>Hexadecimal</b></li>
+
+                    <h2>Opacity: (default 1)</h2>
+                    <li><b>Float</b>: [0, 1]</li>
+
+                    <p>* Only applies to animations: gravity, scroll, & tetris</p>
+                    <p>** Only applies to color type: solid</p>
+
+                </div>
+            </div>
+
+            <div style="height: 100%; width: 50%; float:left;">
+                <div style="margin: 3vh;">
+                    <h1>Links</h1>
+                    <a href="https://github.com/smgood/CubeWebsite">Github</a>
+                    </br>
+                    <a href="http://www.smgoodrich.com/cubes/">Demo</a>
+                </div>
+                <div style="margin: 3vh;">
+                    <h1>Example</h1>
+                </div>
+            </div>
+
+        <div>
+    <div>
 </body>

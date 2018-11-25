@@ -1,4 +1,4 @@
-function Wall (image, wallSize, dimensions) {
+function Wall (image, wallSize, dimensions, color) {
 
     $this = this;
     var group, cubeSize, rows, columns;
@@ -37,7 +37,7 @@ function Wall (image, wallSize, dimensions) {
                     i/columns,
                     j/rows
                 );
-                var cube = new Cube (cubeSize, cubePosition, image, cropInfo);
+                var cube = new Cube (cubeSize, cubePosition, image, cropInfo, color);
                 column.push(cube);
                 group.add(cube.getObject());
             }
