@@ -20,7 +20,7 @@
 3. Allow one big image or each cube a separate image/video
 4. raycasting cube plays video / supports link
 5. animations: explode, pinpression (rotates to mouse, mouse is repulsive magnet), zipper
-6. pass in onload function
+6. create loading gif
 
 ## Bugs
 1. Video doesn't load sometimes

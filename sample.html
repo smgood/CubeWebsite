@@ -66,17 +66,27 @@ Sean
         }
 
         h2 {
-            font-size: 1.6vh;
+            font-size: 1.25vh;
         }
 
         li {
-            font-size: 1.3vh;
+            font-size: 1vh;
             margin-left:3vh;
         }
 
         p, a {
-            font-size: 1.3vh;
+            font-size: 1vh;
             color: #404040;
+        }
+
+        .column {
+            height: 100%;
+            width: 50%;
+            float:left;
+        }
+
+        .indent {
+            margin: 0 3vh;
         }
     </style>
 
@@ -137,7 +147,7 @@ Sean
     <div style="height: 100vh; width: 100vw; position: fixed;">
         <div style="position: relative; height: 100vh; width: 91vh; max-width: 100vw; margin: auto;">
 
-            <div style="height: 100%; width: 50%; float:left;">
+            <div class="column">
                 <div style="margin: 3vh;">
                     <h1>Documentation</h1>
 
@@ -184,18 +194,44 @@ Sean
                 </div>
             </div>
 
-            <div style="height: 100%; width: 50%; float:left;">
+            <div class="column">
+                <div style="margin: 3vh;">
+                    <h1>Example</h1>
+                    <p>var cubism = new Cubism([{</p>
+                        <p class="indent">
+                            rows: 10,</br>
+                            columns: 10,</br>
+                            depth: 1,</br>
+                            animation: 'tetris',</br>
+                            image: './images/stingray.mp4',</br>
+                            transition: 'enter',</br>
+                            start: 20,</br>
+                            end: 80,</br>
+                            colorType: 'rainbow',</br>
+                            opacity: 0.2</br>
+                        </p>
+                    <p>}, {</p>
+                        <p class="indent">
+                            rows: 10,</br>
+                            columns: 10,</br>
+                            animation: 'slideshow',</br>
+                            image: './images/stingray.mp4',</br>
+                            secondaryImage: './images/picasso.jpg',</br>
+                            start: 80,</br>
+                            end: 100,</br>
+                            colorType: 'sample'</br>
+                        </p>
+                    <p>}]);</p>
+                </div>
+
                 <div style="margin: 3vh;">
                     <h1>Links</h1>
                     <a href="https://github.com/smgood/CubeWebsite">Github</a>
                     </br>
                     <a href="http://www.smgoodrich.com/cubes/">Demo</a>
                 </div>
-                <div style="margin: 3vh;">
-                    <h1>Example</h1>
-                </div>
             </div>
 
-        <div>
-    <div>
+        </div>
+    </div>
 </body>
